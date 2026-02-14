@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Valentine's Day - Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        /* Splash Screen - Trang đầu tiên */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+        }
+
+        .splash-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* Message Box - Hộp chứa nội dung */
+        .message-box {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 4rem 5rem;
+            border-radius: 30px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+            text-align: center;
+            max-width: 700px;
+            animation: fadeInScale 1s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Hiệu ứng xuất hiện */
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.7) translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* Tiêu đề */
+        .message-box h1 {
+            color: #ff1493;
+            font-size: 3.5rem;
+            margin-bottom: 2rem;
+            font-weight: 900;
+            text-shadow: 3px 3px 6px rgba(255, 20, 147, 0.3);
+            letter-spacing: 2px;
+        }
+
+        /* Lời chúc */
+        .message-box p {
+            color: #444;
+            font-size: 1.5rem;
+            line-height: 2;
+            margin: 0.8rem 0;
+            font-style: italic;
+            font-weight: 300;
+        }
+
+        /* Nút bấm */
+        #startButton {
+            margin-top: 3rem;
+            padding: 1.2rem 4rem;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, #ff1493, #ff69b4);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(255, 20, 147, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        #startButton:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 35px rgba(255, 20, 147, 0.7);
+            background: linear-gradient(135deg, #ff69b4, #ff1493);
+        }
+
+        #startButton:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        /* Floating hearts decoration */
+        .heart-decoration {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.3;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(10deg);
+            }
+        }
+
+        .heart-decoration:nth-child(1) {
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .heart-decoration:nth-child(2) {
+            top: 20%;
+            right: 15%;
+            animation-delay: 0.5s;
+        }
+
+        .heart-decoration:nth-child(3) {
+            bottom: 15%;
+            left: 15%;
+            animation-delay: 1s;
+        }
+
+        .heart-decoration:nth-child(4) {
+            bottom: 20%;
+            right: 10%;
+            animation-delay: 1.5s;
+        }
+
+        /* Main content - Nội dung chính (hoa) */
+        .main-content {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            background: #000;
+            position: relative;
+        }
+
+        .main-content.show {
+            display: block;
+        }
+
+        /* Placeholder cho hoa */
+        .flower-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #ff69b4;
+            font-size: 3rem;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Splash Screen - Trang đầu tiên -->
+    <div class="splash-screen" id="splashScreen">
+        <div class="message-box">
+            <span class="heart-decoration">💖</span>
+            <span class="heart-decoration">💝</span>
+            <span class="heart-decoration">💕</span>
+            <span class="heart-decoration">💗</span>
+
+            <h1>💖 Happy Valentine's Day! 💝</h1>
+            <p>Yêu em không cần lý do</p>
+            <p>Chỉ cần em luôn bên anh</p>
+            <br>
+            <p>Yêu em không cần lời hứa</p>
+            <p>Chỉ cần trái tim này dành cho em</p>
+
+            <button id="startButton">Xem Hoa Nở 🌸</button>
+        </div>
+    </div>
+
+    <!-- Main Content - Trang hoa (sẽ load sau) -->
+    <div class="main-content" id="mainContent">
+        <div class="flower-container">
+            <div>
+                <h2>🌸 Đang tải hoa... 🌸</h2>
+                <p style="font-size: 1.5rem; margin-top: 1rem;">Trang hoa sẽ hiển thị ở đây</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript xử lý chuyển trang
+        document.getElementById('startButton').addEventListener('click', function () {
+            // Ẩn splash screen
+            document.getElementById('splashScreen').classList.add('hidden');
+
+            // Hiển thị main content sau 0.8s (đợi animation ẩn xong)
+            setTimeout(function () {
+                document.getElementById('mainContent').classList.add('show');
+
+                // Load trang hoa thật (index.html) sau khi ẩn splash screen
+                setTimeout(function () {
+                    window.location.href = 'index.html';
+                }, 500);
+            }, 800);
+        });
+    </script>
+</body>
+
+</html>
