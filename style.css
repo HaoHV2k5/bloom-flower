@@ -1429,4 +1429,251 @@ body {
   transform: translateY(0);
 }
 
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Tablets and smaller laptops (landscape) */
+@media screen and (max-width: 1024px) {
+  .flowers {
+    transform: scale(0.8);
+  }
+
+  .message-box {
+    max-width: 450px;
+    padding: 2rem 3rem;
+  }
+
+  .message-box h1 {
+    font-size: 2rem !important;
+  }
+
+  #startButton {
+    padding: 0.9rem 2.5rem;
+    font-size: 1.1rem;
+  }
+}
+
+/* Tablets (portrait) */
+@media screen and (max-width: 768px) {
+  .flowers {
+    transform: scale(0.85);
+    /* Tăng từ 0.65 lên 0.85 để to hơn */
+  }
+
+  .message-box {
+    max-width: 400px;
+    padding: 2rem 2.5rem;
+    margin: 0 1rem;
+  }
+
+  .message-box h1 {
+    font-size: 1.8rem !important;
+    margin: 0 0 1.5rem 0 !important;
+    letter-spacing: 1px !important;
+  }
+
+  #startButton {
+    padding: 0.85rem 2.2rem !important;
+    font-size: 1.05rem !important;
+  }
+
+  .heart {
+    font-size: 4vmin;
+  }
+
+  .heart-2,
+  .heart-4,
+  .heart-6,
+  .heart-8 {
+    font-size: 5vmin;
+  }
+}
+
+/* Mobile devices (landscape) */
+@media screen and (max-width: 667px) and (orientation: landscape) {
+  .flowers {
+    transform: scale(0.7);
+    /* Tăng từ 0.5 lên 0.7 */
+    margin-bottom: -5vmin;
+  }
+
+  .message-box {
+    max-width: 350px;
+    padding: 1.5rem 2rem;
+  }
+
+  .message-box h1 {
+    font-size: 1.5rem !important;
+    margin: 0 0 1.2rem 0 !important;
+  }
+
+  #startButton {
+    padding: 0.7rem 2rem !important;
+    font-size: 1rem !important;
+  }
+}
+
+/* Mobile devices (portrait) */
+@media screen and (max-width: 480px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  .flowers {
+    /* Tăng kích thước lên đáng kể để giống trên laptop hơn */
+    transform: scale(0.8);
+    margin-bottom: 5vmin;
+    /* Đẩy lên một chút để thấy rõ gốc */
+  }
+
+  .message-box {
+    max-width: 90%;
+    padding: 2rem 1.5rem !important;
+    border-radius: 20px !important;
+    border: 3px solid rgba(255, 255, 255, 0.9) !important;
+  }
+
+  .message-box h1 {
+    font-size: 1.6rem !important;
+    margin: 0 0 1.5rem 0 !important;
+    letter-spacing: 1px !important;
+    white-space: normal !important;
+    line-height: 1.4 !important;
+  }
+
+  #startButton {
+    padding: 0.9rem 2rem !important;
+    font-size: 1rem !important;
+    letter-spacing: 0.5px !important;
+  }
+
+  .heart {
+    font-size: 5vmin;
+  }
+
+  .heart-2,
+  .heart-4,
+  .heart-6,
+  .heart-8 {
+    font-size: 6vmin;
+  }
+
+  /* Optimize flower positions for mobile - Điều chỉnh để hoa to mà không bị cắt */
+  .flower {
+    bottom: 5vmin;
+    /* Hạ thấp vị trí anchor một chút vì hoa đã to hơn */
+  }
+
+  /* Giữ nguyên độ dày nét để trông không bị mảnh khảnh khi phóng to */
+  .flower__line {
+    width: 1.5vmin;
+  }
+
+  .flower__leaf {
+    width: 8vmin;
+    height: 11vmin;
+  }
+
+  .long-g {
+    bottom: 20vmin;
+  }
+}
+
+/* Small mobile devices */
+@media screen and (max-width: 375px) {
+  .flowers {
+    transform: scale(0.75);
+    /* Tăng từ 0.5 lên 0.75 */
+    margin-bottom: 2vmin;
+  }
+
+  .message-box {
+    max-width: 92%;
+    padding: 1.8rem 1.3rem !important;
+  }
+
+  .message-box h1 {
+    font-size: 1.4rem !important;
+    margin: 0 0 1.3rem 0 !important;
+  }
+
+  #startButton {
+    padding: 0.85rem 1.8rem !important;
+    font-size: 0.95rem !important;
+  }
+
+  .heart {
+    font-size: 6vmin;
+  }
+}
+
+/* Extra small devices */
+@media screen and (max-width: 320px) {
+  .flowers {
+    transform: scale(0.7);
+    /* Tăng từ 0.45 lên 0.7 */
+    margin-bottom: 0vmin;
+  }
+
+  .message-box {
+    max-width: 95%;
+    padding: 1.5rem 1.2rem !important;
+  }
+
+  .message-box h1 {
+    font-size: 1.3rem !important;
+    margin: 0 0 1.2rem 0 !important;
+  }
+
+  #startButton {
+    padding: 0.8rem 1.6rem !important;
+    font-size: 0.9rem !important;
+  }
+}
+
+/* Landscape orientation optimization for all mobile devices */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .flowers {
+    transform: scale(0.4);
+    margin-bottom: -15vmin;
+  }
+
+  .message-box {
+    padding: 1.2rem 2rem !important;
+  }
+
+  .message-box h1 {
+    font-size: 1.3rem !important;
+    margin: 0 0 1rem 0 !important;
+  }
+
+  #startButton {
+    padding: 0.7rem 1.8rem !important;
+    font-size: 0.95rem !important;
+  }
+}
+
+/* High DPI displays optimization */
+@media (-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
+  .flower__light {
+    filter: blur(0.15vmin);
+  }
+
+  .flower__leafs::after {
+    filter: blur(8vmin);
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  #startButton {
+    padding: 1.1rem 2.5rem !important;
+    font-size: 1.1rem !important;
+  }
+
+  #startButton:active {
+    transform: scale(0.95) !important;
+  }
+}
+
 /*# sourceMappingURL=style.css.map */
