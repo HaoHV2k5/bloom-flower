@@ -1,0 +1,67 @@
+/* A posted letter lands, opens its flap, and releases the invitation before the PIN. */
+.letter-arrival { position: relative; z-index: 1; width: 100%; height: 100%; min-height: 0; display: grid; grid-template-rows: auto minmax(0,1fr) auto; align-items: center; padding: clamp(12px,3dvh,30px) 24px clamp(15px,3dvh,30px); overflow: clip; }
+.arrival-copy { text-align: center; position: relative; z-index: 1; }
+.arrival-copy h1 { font: 400 clamp(40px,6.8dvh,70px)/1.03 var(--display); letter-spacing: -.025em; color: var(--rose-dark); margin: 0 0 15px; }
+.arrival-copy h1 em { font-weight: 400; }
+.arrival-copy > p { font-size: 12px; color: var(--muted); line-height: 1.7; margin: 0; }
+.arrival-stage { height: 100%; min-height: 0; position: relative; container-type: size; display: grid; place-items: center; }
+.arrival-flight { position: relative; width: min(470px,84cqw,130cqh); aspect-ratio: 1.55; transform-origin: center; }
+.arrival-envelope { position: absolute; inset: 0; width: 100%; height: 100%; display: block; border: 0; border-radius: 5px; background: transparent; padding: 0; perspective: 1400px; transform-style: preserve-3d; text-align: center; box-shadow: 0 23px 40px #75545b24; }
+.arrival-envelope:focus-visible { outline: 2px solid var(--rose-dark); outline-offset: 12px; }
+.arrival-envelope:disabled { cursor: default; }
+.arrival-envelope-back { position: absolute; inset: 0; background: #dcb8aa; border-radius: 5px; }
+.arrival-letter { position: absolute; inset: 13px 20px 10px; z-index: 2; background: #fffdf6; color: var(--rose-dark); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 16px; padding: 18px; box-shadow: 0 4px 16px #754c5214; }
+.arrival-letter > span { font: 400 clamp(20px,5cqh,32px)/1.05 var(--display); }
+.arrival-letter > em { font: italic 400 clamp(17px,4cqh,25px)/1.2 var(--display); }
+.arrival-pocket { position: absolute; inset: 0; z-index: 3; border-radius: 4px; background: #efd8cd; clip-path: polygon(0 0,50% 48%,100% 0,100% 100%,0 100%); }
+.arrival-pocket::before, .arrival-pocket::after { content: ''; position: absolute; inset: 0; pointer-events: none; }
+.arrival-pocket::before { background: #e5c3b7; clip-path: polygon(0 0,52% 50%,0 100%); }
+.arrival-pocket::after { background: #f3ded2; clip-path: polygon(0 100%,50% 43%,100% 100%); }
+.arrival-address { position: absolute; left: 0; right: 0; bottom: 12%; z-index: 1; display: block; font: italic 400 clamp(17px,3.5cqh,22px)/1.3 var(--display); color: #885567; }
+.arrival-address em { display: block; font-style: normal; font-size: clamp(25px,5.5cqh,37px); }
+.arrival-pocket-flower { position: absolute; right: 7%; bottom: 8%; z-index: 1; color: #b28486; transform: rotate(17deg); }
+.arrival-flap { position: absolute; inset: 0 0 40%; z-index: 4; background: linear-gradient(#f3dfd2,#e9cabc); clip-path: polygon(0 0,100% 0,50% 100%); transform-origin: center top; }
+.arrival-seal { position: absolute; top: calc(48% - 30px); left: calc(50% - 30px); width: 60px; height: 60px; z-index: 5; display: grid; place-items: center; border-radius: 47% 48% 45% 49%; background: #9b586d; color: #f5d9c6; box-shadow: inset 0 0 0 4px #a86578, inset 0 0 0 5px #c18b96, 0 4px 8px #72475036; transition: background .2s; }
+.arrival-envelope:hover:not(:disabled) .arrival-seal { background: #86475e; }
+.arrival-instruction { text-align: center; margin: 0; color: var(--rose-dark); font-size: 13px; line-height: 1.8; }
+.arrival-instruction > span { display: block; font: italic 400 18px/1.5 var(--display); color: var(--muted); margin-top: 6px; }
+.invitation-copy h1:focus { outline: none; }
+@media (max-width:760px) {
+ .letter-arrival { padding-inline: 18px; padding-top: 20px; padding-bottom: 25px; }
+ .arrival-copy h1 { font-size: clamp(38px,7.2dvh,56px); }
+ .arrival-copy > p { max-width: 250px; margin: auto; font-size: 11px; }
+ .arrival-flight { width: min(430px,88cqw,140cqh); }
+ .arrival-instruction { font-size: 12px; }
+ .arrival-instruction > span { font-size: 17px; }
+ .arrival-seal { width: 48px; height: 48px; top: calc(48% - 24px); left: calc(50% - 24px); }
+ .arrival-seal > svg { width: 21px; height: 21px; }
+ .arrival-letter { inset: 9px 13px 7px; gap: 10px; padding: 10px; }
+ .arrival-letter > svg:first-child { width: 21px; height: 21px; }
+ .arrival-letter > span { font-size: 25px; }
+ .arrival-letter > em { font-size: 19px; }
+ .arrival-letter > svg:last-child { display: none; }
+ .arrival-pocket-flower { width: 24px; height: 24px; }
+}
+@media (max-height:550px) and (orientation:portrait) {
+ .letter-arrival { padding-block: 10px; }
+ .arrival-copy h1 { font-size: 34px; margin-bottom: 8px; }
+ .arrival-copy > p { font-size: 10px; }
+ .arrival-instruction > span { font-size: 15px; margin-top: 3px; }
+}
+@media (max-height:520px) and (orientation:landscape) {
+ .letter-arrival { grid-template-columns: 1fr 1.15fr; grid-template-rows: minmax(0,1fr) auto; column-gap: 24px; padding-block: 8px; }
+ .arrival-copy h1 { font-size: clamp(32px,9dvh,45px); }
+ .arrival-stage { grid-row: 1 / 3; grid-column: 2; }
+ .arrival-flight { width: min(350px,90cqw,125cqh); }
+ .arrival-instruction { align-self: start; }
+ .arrival-instruction > span { font-size: 15px; }
+ .arrival-letter { gap: 8px; padding: 10px; }
+ .arrival-letter > svg { display: none; }
+ .arrival-letter > span { font-size: 23px; }
+ .arrival-letter > em { font-size: 18px; }
+ .arrival-address { font-size: 17px; }
+ .arrival-address em { font-size: 27px; }
+}
+
+.app-shell:has(.letter-arrival) .butterfly-field { z-index: 0; }
+.app-shell:has(.letter-arrival) .site-header, .app-shell:has(.letter-arrival) .site-footer { position: relative; z-index: 1; }

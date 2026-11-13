@@ -1,0 +1,113 @@
+/* Extends the existing garden: photo keepsakes joined by a quiet, growing timeline. */
+.app-shell:has(.encouragement-journey) { height: auto; min-height: 100dvh; display: flex; }
+.app-shell:has(.encouragement-journey) .site-header { border-bottom: 1px solid #e6ded8; }
+.encouragement-journey { --journey-blue: #44647a; --journey-pale: #e8eff0; width: min(1200px, 90%); margin: 0 auto; color: var(--ink); }
+.encouragement-journey button, .encouragement-journey a { min-height: 44px; }
+.journey-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-block: 14px; color: var(--muted); font-size: 11px; }
+.journey-top button { display: inline-flex; align-items: center; gap: 8px; border: 0; padding: 0 8px 0 0; background: transparent; font-size: 12px; }
+.journey-top button:hover, .journey-reread:hover { color: var(--rose-dark); }
+.journey-intro { display: grid; grid-template-columns: 1.1fr 1fr; align-items: center; gap: 6%; min-height: min(680px, 82svh); padding: 45px 4% 95px; }
+.journey-intro h1 { font: 400 clamp(48px, 5.3vw, 76px)/1.06 var(--display); letter-spacing: -.03em; margin: 0 0 28px; color: var(--journey-blue); text-wrap: balance; }
+.journey-intro h1:focus { outline: none; }
+.journey-intro h1 em { color: var(--rose); font-weight: 400; }
+.journey-intro-copy { font-size: 14px; line-height: 1.95; margin: 0 0 28px; }
+.journey-start { border: 0; border-bottom: 1px solid #a4b4bd; padding: 8px 0; color: var(--journey-blue); background: transparent; display: inline-flex; align-items: center; gap: 22px; font-size: 13px; }
+.journey-start:hover { border-color: var(--journey-blue); }
+.journey-unhurried { font: italic 18px/1.5 var(--display); color: var(--muted); margin: 24px 0 0; }
+.journey-cover { position: relative; padding: 32px 0 45px; }
+.memory-photo { margin: 0; padding: 10px 10px 0; background: #fffdf9; box-shadow: 0 12px 32px #493c3912; transform: rotate(-2deg); align-self: center; }
+.memory-window { position: relative; width: 100%; aspect-ratio: 1.32; overflow: hidden; container-type: size; background: #e0e7e8; }
+.memory-window img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.memory-photo--portrait .memory-window { aspect-ratio: .88; }
+.memory-photo--portrait img { object-position: center 42%; }
+.memory-window--sideways img { position: absolute; left: 50%; top: 50%; width: 100cqh; height: 100cqw; max-width: none; transform: translate(-50%, -50%) rotate(-90deg); }
+.memory-photo figcaption { padding: 17px 6px 19px; text-align: center; font: italic 18px/1.35 var(--display); color: #65535a; }
+.journey-cover-photo { transform: rotate(5deg); }
+.journey-cover-photo .memory-window { aspect-ratio: 1.32; }
+.journey-cover-photo .memory-window img { object-position: center; }
+.journey-cover-note { position: absolute; bottom: 0; right: -5px; font: italic 24px/1.1 var(--display); color: var(--journey-blue); transform: rotate(-7deg); }
+.journey-cover-flower { position: absolute; top: -9px; left: -25px; color: var(--rose); transform: rotate(-20deg); }
+.journey-reading-layout { display: grid; grid-template-columns: 195px minmax(0, 1fr); gap: 35px; position: relative; padding-top: 28px; }
+.journey-index { position: sticky; top: 40px; align-self: start; padding-top: 22px; }
+.journey-index > p { font: italic 20px/1.4 var(--display); max-width: 150px; color: var(--journey-blue); margin: 0 0 24px; }
+.journey-index ol { list-style: none; padding: 0; margin: 0 0 24px; }
+.journey-index a { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--muted); font-size: 11px; padding-block: 10px; transition: color .2s; }
+.journey-index a[aria-current], .journey-index a:hover { color: var(--journey-blue); }
+.journey-index-dot { flex: 0 0 6px; height: 6px; border: 1px solid #8e9da6; border-radius: 50%; }
+.journey-index [aria-current] .journey-index-dot { background: var(--journey-blue); border-color: var(--journey-blue); outline: 3px solid #dce6e9; outline-offset: 3px; }
+.journey-index > svg { color: #a77887; margin-left: 2px; }
+.timeline-chapters { position: relative; min-width: 0; padding-left: 42px; }
+.journey-rail { position: absolute; left: 10px; top: 30px; bottom: 60px; width: 1px; background: #ddd9d2; }
+.journey-rail > span { display: block; width: 100%; height: 100%; background: #77949b; transform-origin: top; }
+.timeline-chapter { position: relative; display: grid; grid-template-columns: 1fr .9fr; align-items: center; gap: 7%; min-height: 610px; padding: 40px 0 90px; scroll-margin-top: 40px; }
+.timeline-marker { position: absolute; top: 35px; left: -47px; width: 32px; height: 32px; background: var(--paper); color: var(--journey-blue); display: grid; place-items: center; }
+.timeline-marker > span { position: absolute; width: 9px; height: 9px; border: 1px solid #77949b; background: var(--paper); border-radius: 50%; }
+.timeline-position { font-size: 11px; color: var(--journey-blue); display: block; margin-bottom: 17px; }
+.timeline-message h2 { font: 400 clamp(34px, 3.2vw, 46px)/1.1 var(--display); color: var(--journey-blue); letter-spacing: -.02em; margin: 0 0 23px; text-wrap: balance; }
+.timeline-body { font-size: 13px; line-height: 1.95; margin: 0 0 22px; }
+.timeline-note { font: italic 24px/1.25 var(--display); color: var(--rose-dark); margin: 0; }
+.timeline-chapter:nth-of-type(even) .memory-photo { transform: rotate(3deg); }
+.journey-ending { padding: 80px 24px 75px; margin: 30px 0 48px; text-align: center; background: var(--journey-pale); border-radius: 48% 48% 0 0 / 20% 20% 0 0; }
+.journey-ending > svg { color: var(--rose); margin-bottom: 22px; }
+.journey-ending h2 { font: 400 clamp(32px, 4vw, 52px)/1.15 var(--display); color: var(--journey-blue); letter-spacing: -.02em; margin: 0 0 24px; text-wrap: balance; }
+.journey-ending h2 em { font-weight: 400; }
+.journey-ending > p { font-size: 13px; line-height: 1.9; margin: 0 0 30px; }
+.journey-gift { display: inline-flex; align-items: center; justify-content: center; gap: 22px; background: var(--journey-blue); color: white; border: 0; border-radius: 5px; padding: 14px 25px; font-size: 13px; transition: background .2s; }
+.journey-gift:hover { background: #334f62; }
+.journey-reread { display: block; margin: 12px auto 0; padding: 8px 12px; background: transparent; border: 0; color: var(--muted); font-size: 11px; }
+@media (max-width: 1000px) {
+ .journey-reading-layout { grid-template-columns: 155px minmax(0,1fr); gap: 20px; }
+ .timeline-chapter { gap: 6%; min-height: 550px; }
+ .timeline-message h2 { font-size: 36px; }
+ .timeline-note { font-size: 22px; }
+ .memory-photo figcaption { font-size: 16px; padding: 13px 4px 15px; }
+}
+@media (max-width: 760px) {
+ .encouragement-journey { width: 89%; }
+ .app-shell:has(.encouragement-journey) .site-header { padding-block: 12px; }
+ .journey-top { padding-top: 8px; }
+ .journey-top > span { display: none; }
+ .journey-intro { grid-template-columns: 1fr; min-height: auto; padding: 26px 0 75px; gap: 28px; }
+ .journey-intro h1 { font-size: clamp(44px, 10vw, 65px); margin-bottom: 23px; }
+ .journey-intro-copy { font-size: 13px; line-height: 1.85; margin-bottom: 20px; }
+ .journey-unhurried { font-size: 17px; margin-top: 17px; }
+ .journey-cover { width: 82%; justify-self: center; padding: 15px 0 34px; }
+ .journey-cover-photo .memory-window { aspect-ratio: 1.3; }
+ .journey-cover-flower { width: 46px; height: 46px; top: -13px; left: -22px; }
+ .journey-cover-note { right: -18px; bottom: -3px; font-size: 23px; }
+ .journey-reading-layout { display: block; padding: 0; }
+ .journey-index { display: none; }
+ .timeline-chapters { padding-left: 30px; }
+ .journey-rail { left: 5px; bottom: 60px; }
+ .timeline-chapter { grid-template-columns: minmax(0,1fr); min-height: auto; gap: 30px; padding: 24px 0 74px; scroll-margin-top: 20px; }
+ .timeline-marker { top: 16px; left: -40px; }
+ .timeline-position { font-size: 11px; margin-bottom: 14px; }
+ .timeline-message h2 { font-size: clamp(34px,8.5vw,45px); margin-bottom: 20px; max-width: 15ch; }
+ .timeline-body { font-size: 13px; line-height: 1.9; margin-bottom: 20px; }
+ .timeline-note { font-size: 24px; }
+ .timeline-chapter .memory-photo { width: 94%; justify-self: center; }
+ .timeline-chapter .memory-photo--portrait .memory-window { aspect-ratio: .93; }
+ .journey-ending { padding: 65px 17px 45px; margin-top: 0; margin-bottom: 28px; border-radius: 45% 45% 0 0 / 8% 8% 0 0; }
+ .journey-ending h2 { font-size: 34px; }
+ .journey-ending > p { font-size: 12px; }
+}
+@media (max-width: 370px) { .journey-desktop-break { display: none; } .journey-intro h1 { font-size: 42px; } .timeline-message h2 { font-size: 33px; } }
+@media (prefers-reduced-motion: reduce) { .encouragement-journey *, .encouragement-journey *::before, .encouragement-journey *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+
+/* The vine opens into a flower at each visited chapter. */
+.timeline-marker > svg { transform: scale(.3) rotate(-65deg); opacity: 0; transition: transform .75s cubic-bezier(.16,1,.3,1), opacity .45s; }
+.timeline-marker > span { transition: transform .45s, opacity .3s; }
+.timeline-chapter.is-reached .timeline-marker > svg { transform: scale(1) rotate(0); opacity: 1; }
+.timeline-chapter.is-reached .timeline-marker > span { transform: scale(.2); opacity: 0; }
+
+/* A small paper keepsake, with one arrival animation and no task to complete. */
+.journey-keepsake { position: relative; align-self: center; width: 100%; min-height: 350px; padding: 40px 22px 30px; background: #f6e9e5; color: var(--rose-dark); box-shadow: 0 12px 28px #79585c17; transform: rotate(3deg); text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.journey-keepsake::before { content: ''; position: absolute; inset: 13px; border: 1px solid #bf8e952e; pointer-events: none; }
+.keepsake-tape { position: absolute; top: -13px; left: calc(50% - 39px); width: 78px; height: 27px; background: #ddcbb9b3; transform: rotate(-7deg); }
+.keepsake-flower { margin-bottom: 20px; }
+.keepsake-quote { margin: 0; font: 400 clamp(32px,3vw,43px)/1.15 var(--display); letter-spacing: -.015em; }
+.keepsake-quote em { font-weight: 400; }
+.keepsake-divider { display: flex; align-items: center; gap: 11px; margin-top: 24px; }
+.keepsake-divider::before, .keepsake-divider::after { content: ''; width: 27px; height: 1px; background: #c8a2a6; }
+.keepsake-signature { font: italic 21px/1.4 var(--display); margin: 14px 0 0; }
+@media (max-width:760px) { .journey-keepsake { width: 92%; min-height: 345px; justify-self: center; margin-block: 10px; } .keepsake-quote { font-size: 38px; } }

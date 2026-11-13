@@ -1,0 +1,595 @@
+:root {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-weight: 400;
+  color: #57454b;
+  background: #fcf8f5;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  --paper: #fcf8f5;
+  --ink: #57454b;
+  --muted: #75646a;
+  --rose: #9f5b70;
+  --rose-dark: #87485e;
+  --rose-soft: #f5e9e8;
+  --sage: #83917b;
+  --display: 'Cormorant Garamond', Georgia, serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; }
+button, input, a { -webkit-tap-highlight-color: transparent; }
+button, input { font: inherit; }
+button, a { touch-action: manipulation; }
+button { cursor: pointer; }
+button:disabled { cursor: default; }
+button, a { outline-offset: 5px; }
+button:focus-visible, a:focus-visible { outline: 2px solid var(--rose); }
+button { color: inherit; }
+::selection { background: #ecd0d7; color: #57454b; }
+.app-shell { width: min(100%, 1600px); margin: auto; min-height: 100svh; display: flex; flex-direction: column; }
+.site-header { padding: 29px 5%; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.wordmark { display: inline-flex; gap: 11px; align-items: center; text-decoration: none; color: var(--ink); font: 500 31px/1 var(--display); letter-spacing: -.04em; }
+.wordmark svg { color: var(--rose); }
+.wordmark span { color: var(--rose); margin-left: -10px; }
+.header-controls { display: flex; align-items: center; gap: 9px; }
+.header-note { color: var(--muted); font-size: 13px; margin-right: 21px; }
+.icon-button { width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; display: inline-grid; place-items: center; color: var(--ink); background: transparent; transition: background .2s, color .2s; }
+.icon-button:hover { background: var(--rose-soft); color: var(--rose-dark); }
+.icon-button[aria-pressed="true"] { color: var(--rose-dark); }
+.invitation-layout { width: min(1120px, 88%); margin: 12px auto 32px; flex: 1; display: grid; grid-template-columns: 1.12fr 1fr; align-items: center; gap: clamp(55px, 9vw, 130px); }
+.illustration-panel { position: relative; align-self: center; padding-top: 10px; }
+.garden-art-frame { width: 100%; aspect-ratio: .735; max-height: 690px; border-radius: 48% 48% 8px 8px / 34% 34% 8px 8px; position: relative; overflow: hidden; background: #f0e7df; }
+.garden-art { display: block; width: 100%; height: 100%; object-fit: cover; }
+.art-caption { position: absolute; bottom: 27px; width: 100%; color: #514e40; text-align: center; font: italic 400 31px/.98 var(--display); display: flex; flex-direction: column; gap: 3px; padding: 19px 12px; background: #fff9edc7; }
+.illustration-caption { text-align: center; font: italic 400 17px/1.5 var(--display); color: #7c7070; margin: 20px -20px 0; }
+.butterfly-field { position: absolute; inset: 0; pointer-events: none; }
+.garden-butterfly { width: 75px; position: absolute; will-change: transform; }
+.garden-butterfly svg { width: 100%; display: block; overflow: visible; }
+.garden-butterfly--1 { top: 7%; left: 81%; width: 85px; }
+.garden-butterfly--2 { top: 15%; left: -3%; width: 58px; opacity: .9; }
+.garden-butterfly--3 { top: 64%; left: -8%; width: 55px; }
+.garden-butterfly--4 { top: 75%; left: 91%; width: 64px; opacity: .85; }
+.invitation-panel { width: 100%; max-width: 440px; padding: 12px 0 16px; }
+.invitation-copy h1 { font: 400 clamp(55px, 5.6vw, 78px)/.94 var(--display); letter-spacing: -.045em; color: var(--ink); margin: 0 0 25px; }
+.invitation-copy > p { color: var(--ink); font-size: 16px; line-height: 1.8; margin: 0 0 24px; }
+.pin-form { max-width: 330px; }
+.pin-label { display: flex; align-items: center; gap: 8px; font-size: 13px; margin-bottom: 13px; color: var(--muted); }
+.otp-container { position: relative; width: 100%; }
+.otp-group { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; width: 100%; }
+.otp-slot { height: 65px; position: relative; display: grid; place-items: center; border: 1px solid #e2d6d4; background: #fffdfb; border-radius: 9px; transition: border-color .2s, background .2s; }
+.otp-slot.is-active { border-color: var(--rose); outline: 2px solid #efdce1; outline-offset: 3px; }
+.otp-slot.is-filled { background: #f5e9e8; border-color: #e0c5cb; }
+.slot-placeholder { color: #d6bfc3; font-size: 25px; }
+.pin-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--rose); }
+.otp-caret { position: absolute; width: 1px; height: 21px; background: var(--rose); animation: caret 1s steps(2) infinite; }
+@keyframes caret { 50% { opacity: 0; } }
+.has-error .otp-slot { border-color: #b3787c; }
+.pin-helper { font-size: 16px; color: var(--muted); text-align: center; margin: 13px 0 16px; }
+.keypad-toggle { display: none; }
+.number-pad { display: grid; grid-template-columns: repeat(3, 62px); justify-content: center; gap: 7px 28px; }
+.number-pad > button { min-width: 44px; height: 48px; border: 0; background: transparent; border-radius: 50%; display: grid; place-items: center; color: var(--ink); font: 500 32px/1 var(--display); transition: background .18s, color .18s, transform .18s; }
+.number-pad > button:hover:not(:disabled) { background: var(--rose-soft); color: var(--rose-dark); }
+.number-pad > button:active:not(:disabled) { transform: scale(.94); background: #eddcde; }
+.number-pad > button:disabled { opacity: .5; }
+.keypad-flower { display: grid; place-items: center; color: #b9a692; }
+.pin-message { text-align: center; min-height: 36px; font-size: 13px; line-height: 1.6; color: var(--sage); margin: 8px -15px 3px; }
+.pin-message.is-error { color: #a15a6b; }
+.primary-button { display: flex; width: 100%; min-height: 51px; align-items: center; justify-content: center; gap: 17px; padding: 14px 24px; border: 0; border-radius: 6px; background: var(--rose); color: #fffdfb; font-size: 13px; line-height: 1.5; transition: background .2s, transform .2s; }
+.primary-button:hover:not(:disabled) { background: var(--rose-dark); }
+.primary-button:active:not(:disabled) { transform: translateY(1px); }
+.primary-button:disabled { opacity: .75; }
+.help-link { display: flex; align-items: center; gap: 5px; margin: 13px auto 0; min-height: 36px; background: transparent; border: 0; color: var(--muted); font-size: 13px; }
+.help-link:hover { color: var(--rose-dark); }
+.site-footer { padding: 17px 5% 24px; display: flex; justify-content: space-between; align-items: center; gap: 16px; color: var(--muted); font-size: 13px; }
+.site-footer > span:last-child { display: flex; gap: 8px; align-items: center; }
+.site-footer svg { color: var(--rose); }
+.is-opening .invitation-layout { pointer-events: none; }
+.tooltip { background: var(--ink); color: var(--paper); border-radius: 6px; padding: 8px 12px; font-size: 13px; z-index: 100; animation: tooltip-in .15s ease-out; }
+.tooltip-arrow { fill: var(--ink); }
+@keyframes tooltip-in { from { opacity: 0; transform: translateY(3px); } }
+.dialog-overlay { position: fixed; inset: 0; background: #57454b55; z-index: 90; animation: overlay-in .2s ease-out; }
+.help-dialog { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 100; width: min(430px, calc(100% - 40px)); border-radius: 18px; padding: 44px 36px 32px; background: var(--paper); box-shadow: 0 20px 90px #57454b24; }
+.dialog-heart { color: var(--rose); margin-bottom: 10px; }
+.help-dialog h2 { font: 400 36px/1.05 var(--display); letter-spacing: -.025em; margin: 0 0 20px; }
+.help-dialog > p { font-size: 14px; line-height: 1.9; color: var(--muted); }
+.help-dialog .hint-example { display: flex; gap: 8px; font-size: 13px; margin-block: 20px 25px; }
+.dialog-close { position: absolute; top: 10px; right: 10px; }
+.audio-message { position: fixed; right: 20px; bottom: 17px; z-index: 110; margin: 0; max-width: 320px; background: var(--paper); font-size: 13px; line-height: 1.7; border-radius: 8px; }
+.audio-message:not(:empty) { padding: 14px 18px; border: 1px solid #e2d6d4; }
+@media (min-width: 1500px) { .invitation-layout { width: 1160px; } }
+@media (max-width: 1050px) {
+  .invitation-layout { width: 88%; gap: 65px; grid-template-columns: 1fr 1fr; }
+  .invitation-copy h1 { font-size: 64px; }
+  .garden-art-frame { aspect-ratio: .66; }
+  .illustration-caption { font-size: 15px; }
+  .art-caption { font-size: 26px; }
+  .header-note { margin-right: 10px; }
+}
+@media (max-width: 760px) {
+  .site-header { padding: 18px 6%; }
+  .wordmark { font-size: 29px; }
+  .header-note { display: none; }
+  .header-controls { gap: 2px; }
+  .invitation-layout { width: 86%; max-width: 560px; grid-template-columns: 1fr; gap: 19px; margin-top: 8px; }
+  .illustration-panel { width: 100%; padding: 0; }
+  .garden-art-frame { height: 180px; aspect-ratio: auto; border-radius: 45% 45% 6px 6px / 53% 53% 6px 6px; max-height: 360px; }
+  .garden-art { object-position: 50% 65%; }
+  .art-caption { bottom: 14px; padding: 10px; font-size: 24px; gap: 0; }
+  .art-caption span { display: inline; }
+  .art-caption span:first-child::after { content: ' '; }
+  .art-caption { display: block; }
+  .illustration-caption { margin-top: 14px; font-size: 16px; }
+  .garden-butterfly--1 { width: 65px; top: 4%; left: 72%; }
+  .garden-butterfly--2 { width: 47px; top: 13%; left: 3%; }
+  .garden-butterfly--3 { width: 40px; left: -1%; top: 64%; }
+  .garden-butterfly--4 { width: 42px; left: 87%; top: 66%; }
+  .invitation-panel { margin: 0 auto; text-align: center; padding-top: 0; max-width: 350px; }
+  .invitation-copy h1 { font-size: 52px; line-height: .93; margin-bottom: 16px; }
+  .invitation-copy h1 br { display: block; }
+  .invitation-copy > p { font-size: 16px; line-height: 1.65; margin-bottom: 24px; }
+  .pin-form { margin-inline: auto; max-width: 330px; }
+  .pin-label { font-size: 13px; justify-content: center; }
+  .otp-slot { height: 62px; }
+  .keypad-toggle { display: flex; align-items: center; justify-content: center; gap: 8px; border: 0; background: transparent; color: var(--muted); width: 100%; min-height: 44px; font-size: 13px; }
+  .keypad-toggle[aria-expanded="true"] svg:last-child { transform: rotate(180deg); }
+  .number-pad[data-mobile-open="false"] { display: none; }
+  .number-pad { grid-template-columns: repeat(3, 66px); gap: 8px 30px; }
+  .number-pad > button { height: 48px; }
+  .pin-helper { margin: 10px 0 6px; font-size: 14px; }
+  .pin-message { margin-top: 8px; }
+  .site-footer { padding: 25px 6% 27px; justify-content: center; text-align: center; flex-direction: column; gap: 10px; }
+  .site-footer > span:first-child { font-size: 13px; }
+  .header-controls .icon-button { width: 44px; height: 44px; }
+}
+@media (max-width: 380px) {
+  .invitation-layout { width: 86%; gap: 30px; }
+  .invitation-copy h1 { font-size: 48px; }
+  .otp-group { gap: 10px; }
+  .otp-slot { height: 58px; }
+  .number-pad { gap: 5px 22px; }
+  .garden-butterfly--1 { left: 65%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition: none !important; }
+  .is-opening .invitation-layout { transform: none; }
+}
+
+/* Butterflies live outside the content so their flight continues between screens. */
+.butterfly-field { position: fixed; inset: 0; z-index: 5; overflow: hidden; pointer-events: none; contain: strict; }
+.butterfly-field .garden-butterfly { top: 0; left: 0; width: 79px; opacity: .8; }
+.butterfly-field .garden-butterfly--2 { width: 60px; opacity: .7; }
+.butterfly-field .garden-butterfly--3 { width: 53px; opacity: .65; }
+.butterfly-field .garden-butterfly--4 { width: 69px; opacity: .75; }
+/* The invitation unfolds into a keepsake; the original flower stage is untouched. */
+.keepsake-reveal { position: relative; flex: 1; width: min(1120px, 92%); margin: 0 auto; padding: 62px 0 8px; }
+.letter-back { display: inline-flex; align-items: center; gap: 9px; min-height: 44px; padding: 10px 0; border: 0; background: transparent; color: var(--muted); font-size: 13px; position: absolute; left: 0; top: 0; }
+.letter-back:hover { color: var(--rose-dark); }
+.letter-scene:focus, .gift-scene:focus, .letter-paper h1:focus { outline: none; }
+.letter-stage { perspective: 8000px; padding: 15px 20px 30px; }
+.letter-book { position: relative; width: min(960px, 100%); margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; transform-style: preserve-3d;  }
+.letter-art-page, .letter-paper { min-height: 600px; }
+.letter-art-page { padding: 38px 40px 28px; background: #f1e3df; display: flex; flex-direction: column; align-items: center; border-radius: 3px 0 0 3px; box-shadow: 0 22px 38px #57454b16; } /* taste-skill-ignore: shadow belongs to the visible paper, never its hidden wrapper. */
+.letter-art-window { width: 100%; flex: 1; min-height: 300px; max-height: 390px; overflow: hidden; border-radius: 48% 48% 2px 2px / 38% 38% 2px 2px; }
+.letter-art-window img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.letter-art-page > p { font: 400 29px/1.15 var(--display); text-align: center; color: #72505a; margin: 27px 0 18px; }
+.letter-art-page > svg { color: var(--rose); }
+.letter-paper { padding: 38px 40px 32px; background: #fffcf7; border-radius: 0 3px 3px 0; position: relative; box-shadow: inset 12px 0 16px -18px #72505a, 14px 22px 38px #57454b12; } /* taste-skill-ignore: the fold of the paper. */
+.letter-ornament { display: flex; align-items: center; justify-content: center; gap: 17px; margin: 0 0 27px; color: var(--rose); }
+.letter-paper h1 { color: #794c5a; font: 400 clamp(34px, 3.6vw, 46px)/1.05 var(--display); letter-spacing: -.025em; margin: 0 0 26px; text-wrap: balance; }
+.letter-paper > p { font-size: 16px; line-height: 1.8; margin: 0 0 17px; color: #635158; }
+.letter-paper .letter-signature { position: relative; color: var(--rose-dark); font: 400 24px/1.15 var(--display); margin: 27px 0; }
+.letter-signature > svg { margin: 0 0 0 12px; }
+.letter-action { margin-top: 28px; padding-top: 22px;  }
+.letter-action > p { font-size: 12px; line-height: 1.7; margin: 0 0 14px; color: var(--muted); }
+.receive-flowers { width: 100%; justify-content: space-between; border-radius: 3px; font-size: 13px; }
+.letter-cover { visibility: hidden; position: absolute; width: 50%; height: 100%; top: 0; right: 0; transform-origin: left center; transform-style: preserve-3d; z-index: 2; pointer-events: none; }
+.letter-cover-front, .letter-cover-back { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 0 3px 3px 0; }
+.letter-cover-front { background: #ead4cf; color: #7e4c5b; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 32px; box-shadow: inset 8px 0 14px -13px #794c5a, 0 22px 38px #57454b16; } /* taste-skill-ignore: physical cover fold. */
+.letter-cover-front > p { font: 400 clamp(45px, 4.6vw, 63px)/1.02 var(--display); letter-spacing: -.03em; text-align: center; margin: 29px 0 36px; }
+.cover-dedication { font-size: 11px; line-height: 1.7; text-align: center; }
+.letter-cover-front > svg:last-child { margin-top: 25px; }
+.letter-cover-back { background: #f1e3df; transform: rotateY(180deg); }
+.letter-postscript { min-height: 44px; text-align: center; }
+.letter-postscript > p { font: italic 400 18px/1.5 var(--display); color: var(--muted); margin: 0; }
+.skip-letter { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; border: 0; background: transparent; font-size: 12px; color: var(--muted); }
+.skip-letter:hover { color: var(--rose-dark); }
+.gift-scene { position: relative; padding-top: 12px; display: grid; grid-template-columns: .8fr 1.2fr; align-items: center; gap: 35px; min-height: 650px; }
+.gift-scene > .letter-back { top: -62px; }
+.gift-heading { padding-left: 40px; }
+.gift-heading h1 { color: var(--rose-dark); font: 400 clamp(54px, 6vw, 80px)/.95 var(--display); letter-spacing: -.03em; margin: 0 0 28px; }
+.gift-heading p { font-size: 15px; line-height: 1.9; max-width: 290px; }
+.flower-gift { width: 100%; margin: 0; text-align: center; }
+.flower-gift figcaption { padding-top: 14px; }
+.replay-flowers { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 10px 15px; border: 0; background: transparent; color: var(--rose-dark); font-size: 13px; border-radius: 6px; }
+.replay-flowers:hover { background: var(--rose-soft); }
+@media (max-width: 1050px) and (min-width: 761px) {
+  .letter-art-page { padding: 30px 26px; }
+  .letter-paper { padding: 32px 28px; }
+  .letter-art-page > p { font-size: 25px; }
+}
+@media (max-width: 760px) {
+  .keepsake-reveal { width: 90%; padding-top: 55px; }
+  .letter-stage { padding: 8px 0 23px; perspective: 8000px; }
+  .letter-book { display: block; max-width: 460px;  }
+  .letter-art-page { display: none; }
+  .letter-paper { min-height: 0; padding: 30px clamp(23px, 7vw, 38px); border-radius: 3px; box-shadow: 0 14px 28px #57454b16; /* taste-skill-ignore: single mobile paper sheet. */ }
+  .letter-ornament { margin-bottom: 24px; }
+  .letter-paper h1 { font-size: clamp(34px, 9.5vw, 44px); margin-bottom: 23px; }
+  .letter-paper > p { font-size: 16px; line-height: 1.8; }
+  .letter-paper .letter-signature { font-size: 24px; margin: 24px 0; }
+  .letter-action { margin-top: 24px; padding-top: 20px; }
+  .letter-action > p { font-size: 12px; }
+  .letter-cover { width: 100%; }
+  .letter-cover-front > p { font-size: 58px; }
+  .letter-postscript > p { font-size: 16px; max-width: 260px; margin: auto; }
+  .gift-scene { display: flex; flex-direction: column; gap: 14px; min-height: 0; padding-top: 8px; }
+  .gift-scene > .letter-back { top: -55px; }
+  .gift-heading { padding: 0; text-align: center; }
+  .gift-heading h1 { font-size: 54px; margin-bottom: 18px; }
+  .gift-heading p { max-width: 300px; margin: 0 auto; font-size: 14px; }
+  .flower-gift { max-width: 560px; }
+}
+
+/* Keep the reading surface clear of the decorative flight paths. */
+.is-garden .butterfly-field { visibility: hidden; }
+/* A real page turn and a sealed last-page surprise, inside the existing stationery world. */
+.storybook { perspective: 8000px; }
+.book-page-edges, .book-spine, .book-bookmark { visibility: hidden; pointer-events: none; }
+.storybook.is-readable .book-page-edges, .storybook.is-readable .book-spine, .storybook.is-readable .book-bookmark { visibility: visible; }
+.book-page-edges { position: absolute; inset: 6px -5px -9px; background: #e4d4c9; border-radius: 4px; transform: translateZ(-6px); box-shadow: 0 2px #fffcf7, 0 4px #d6c4b7, 0 6px #fffcf7, 0 9px #ae7981, 0 25px 35px #57454b1c; }
+.book-spine { position: absolute; left: calc(50% - 7px); top: 0; bottom: -5px; width: 14px; background: #d8c0b7; border-radius: 45%; box-shadow: inset 4px 0 5px #fff8f2a1, inset -4px 0 6px #75575b26; z-index: 7; }
+.book-bookmark { position: absolute; top: -5px; left: 62%; width: 18px; height: 53px; z-index: 8; background: #9f5b70; clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 87%, 0 100%); }
+.letter-cover-front { border-left: 9px solid #c29c98; }
+.book-page-stack { position: relative; display: grid; min-width: 0; transform-style: preserve-3d; }
+.book-page-stack > * { grid-area: 1 / 1; min-width: 0; }
+.turning-leaf { position: relative; display: grid; transform-origin: left center; transform-style: preserve-3d; z-index: 4; }
+.turning-leaf > .wishes-paper { backface-visibility: hidden; }
+.leaf-reverse { position: absolute; inset: 0; display: grid; place-items: center; color: #b89a8b; background: #f1e3df; backface-visibility: hidden; transform: rotateY(180deg); box-shadow: -12px 12px 24px #57454b18; }
+.leaf-shade { position: absolute; inset: 0; opacity: 0; visibility: hidden; background: #67494b; pointer-events: none; backface-visibility: hidden; }
+.storybook[data-page="secret"] .turning-leaf { visibility: hidden; pointer-events: none; }
+.art-page-content { width: 100%; display: flex; flex-direction: column; align-items: center; flex: 1; }
+.art-page-content .letter-art-window { width: 100%; }
+.art-page-content > p { font: 400 29px/1.15 var(--display); text-align: center; color: #72505a; margin: 27px 0 18px; }
+.art-page-content > svg { color: var(--rose); }
+.letter-art-page { position: relative; }
+.secret-dedication { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 42px; visibility: hidden; color: #794c5a; }
+.secret-dedication > p { font: 400 clamp(38px, 4.2vw, 56px)/1.02 var(--display); letter-spacing: -.025em; text-align: center; margin: 36px 0; }
+.secret-dedication > span { font-size: 13px; line-height: 1.7; }
+.storybook[data-page="secret"] .secret-dedication { visibility: visible; }
+.storybook[data-page="secret"] .art-page-content { visibility: hidden; }
+.turn-page { display: flex; align-items: center; justify-content: flex-end; gap: 14px; width: 100%; min-height: 62px; border: 0; background: transparent; color: var(--rose-dark); text-align: right; font: italic 400 25px/1.1 var(--display); padding: 5px 10px 5px 0; }
+.letter-action { position: relative; margin-top: 24px; padding-top: 8px; }
+.letter-action > p { margin-bottom: 0; font-size: 13px; }
+.page-corner { position: absolute; width: 42px; height: 42px; right: -40px; bottom: -32px; background: #ead7ca; clip-path: polygon(100% 0, 100% 100%, 0 100%); transform-origin: right bottom; transition: transform .3s, background .3s; }
+.turn-page:hover:not(:disabled) .page-corner, .turn-page:focus-visible .page-corner { transform: scale(1.25); background: #dab8b1; }
+.turn-page:hover:not(:disabled) > svg { transform: translateX(4px); }
+.turn-page > svg { transition: transform .3s; }
+.turn-page:disabled { cursor: default; }
+.secret-paper { visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.storybook.is-last-page .secret-paper { visibility: visible; }
+.secret-paper h2 { color: #794c5a; font: 400 clamp(32px, 3.4vw, 43px)/1.05 var(--display); letter-spacing: -.025em; margin: 0 0 20px; }
+.secret-paper h2:focus { outline: none; }
+.secret-paper > p { font-size: 14px; line-height: 1.8; margin: 0; }
+.envelope-wrap { width: min(320px, 100%); margin: 38px auto 15px; }
+.secret-envelope { position: relative; aspect-ratio: 1.55; width: 100%; background: #e9ccc1; perspective: 1100px; transform-style: preserve-3d; box-shadow: 0 14px 22px #75575b1f; }
+.envelope-letter { position: absolute; inset: 10px 14px 0; background: #fffcf7; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; color: var(--rose-dark); font: italic 400 25px/1.1 var(--display); z-index: 1; }
+.envelope-pocket { position: absolute; inset: 0; z-index: 3; background: #efd9cc; clip-path: polygon(0 0, 50% 49%, 100% 0, 100% 100%, 0 100%); }
+.envelope-pocket::after { content: ''; position: absolute; inset: 0; background: #e6c4b8; clip-path: polygon(0 100%, 50% 40%, 100% 100%); }
+.envelope-flap { position: absolute; inset: 0 0 35%; background: #f3ddd0; clip-path: polygon(0 0, 100% 0, 50% 100%); transform-origin: center top; z-index: 4; }
+.envelope-ribbon { position: absolute; top: 0; bottom: 0; left: calc(50% - 11px); width: 22px; background: #a46373; box-shadow: inset 3px 0 #bb7c89, inset -3px 0 #925367; z-index: 5; }
+.ribbon-tail { position: absolute; top: 86%; left: calc(50% - 11px); width: 22px; height: 68px; background: #a46373; clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 84%, 0 100%); z-index: 5; }
+.seal-button { position: absolute; left: calc(50% - 31px); top: calc(47% - 31px); width: 62px; height: 62px; border: 0; border-radius: 48% 46% 50% 44%; display: grid; place-items: center; color: #f6dacc; background: #9a5064; box-shadow: inset 0 0 0 5px #a66070, inset 0 0 0 6px #c38892, 0 5px 8px #71444c40; z-index: 6; touch-action: none; transition: background .2s; }
+.seal-button:hover:not(:disabled) { background: #854359; }
+.seal-button:focus-visible { outline: 2px solid #754051; outline-offset: 7px; }
+.seal-button:active:not(:disabled) { background: #7c3e51; }
+.envelope-instruction { margin: 57px 0 0; font-size: 13px; line-height: 1.8; color: var(--rose-dark); }
+.envelope-instruction > span { display: block; color: var(--muted); }
+.previous-page { border: 0; background: transparent; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px; min-height: 44px; font-size: 13px; margin-top: 6px; color: var(--muted); }
+.previous-page:hover:not(:disabled) { color: var(--rose-dark); }
+.popup-gift { display: flex; flex-direction: column; gap: 4px; min-height: 0; padding-top: 2px; perspective: 1500px; }
+.popup-gift .gift-heading { padding: 0; text-align: center; }
+.popup-gift .gift-heading h1 { font-size: clamp(46px, 4.6vw, 64px); margin-bottom: 15px; }
+.popup-gift .gift-heading h1 br { display: none; }
+.popup-gift .gift-heading h1 br::after { content: ' '; }
+.popup-gift .gift-heading p { max-width: none; margin: 0; font-size: 14px; }
+.popup-gift .flower-gift { width: min(800px, 100%); }
+.popup-theatre { position: relative; padding: 0 30px 30px; perspective: 1500px; }
+.popup-book { position: absolute; left: 0; right: 0; bottom: 25px; height: 250px; display: grid; grid-template-columns: 1fr 1fr; transform: rotateX(57deg); transform-origin: center bottom; transform-style: preserve-3d; }
+.popup-book > div { background: #fffaf2; box-shadow: 0 4px #d4c2b5, 0 7px #fffcf7, 0 11px #b58186, 0 28px 35px #75575b29; border-radius: 3px; }
+.popup-book > div:first-child { transform: rotateY(-6deg); transform-origin: right; }
+.popup-book > div:nth-child(2) { transform: rotateY(6deg); transform-origin: left; }
+.popup-fold { position: absolute; top: 0; bottom: 0; left: calc(50% - 4px); width: 8px; background: #dcc8b9; }
+.popup-flowers { position: relative; transform-origin: center bottom; }
+.popup-flowers .bloom-stage { background: transparent; border-radius: 0; height: clamp(350px, 65vw, 490px); }
+.popup-flowers .bloom-canvas { --dark-color: #fcf8f5; }
+.popup-gift figcaption { position: relative; padding-top: 8px; }
+.popup-gift figcaption > p { font: italic 400 22px/1.35 var(--display); margin: 0 0 5px; }
+@media (max-width: 1050px) and (min-width: 761px) {
+  .secret-dedication { padding: 26px; }
+  .secret-dedication > span { text-align: center; }
+  .page-corner { right: -28px; }
+}
+@media (max-width: 760px) {
+  .book-spine { left: -4px; width: 9px; }
+  .book-bookmark { left: auto; right: 25px; width: 15px; height: 44px; }
+  .book-page-edges { inset: 4px -4px -6px; }
+  .book-page-stack { perspective: none; }
+  .turning-leaf { transform-origin: left center; }
+  .leaf-reverse { border-radius: 3px; }
+  .page-corner { right: calc(-1 * clamp(23px, 7vw, 38px)); bottom: -30px; width: 34px; height: 34px; }
+  .turn-page { font-size: 24px; }
+  .secret-paper { padding-top: 45px; padding-bottom: 24px; }
+  .secret-paper h2 { font-size: clamp(32px, 8.6vw, 41px); }
+  .envelope-wrap { margin-top: 32px; }
+  .envelope-instruction { font-size: 13px; }
+  .popup-gift .gift-heading h1 { font-size: 48px; }
+  .popup-gift .gift-heading h1 br { display: block; }
+  .popup-gift .gift-heading p { font-size: 13px; }
+  .popup-theatre { padding: 0 7px 22px; }
+  .popup-book { height: 160px; bottom: 25px; }
+  .popup-flowers .bloom-stage { height: clamp(340px, 105vw, 440px); }
+  .popup-gift figcaption > p { font-size: 20px; max-width: 270px; margin-inline: auto; }
+}
+.envelope-ribbon, .ribbon-tail { touch-action: none; cursor: grab; }
+.envelope-ribbon:active, .ribbon-tail:active { cursor: grabbing; }
+
+/* The final spread grows outward, then lets a few real petals drift away. */
+.popup-gift .flower-gift { width: min(1060px, 100%); }
+.popup-theatre { padding: 0 20px 32px; }
+.garden-parallax { position: relative; transform-style: preserve-3d; transform-origin: center 80%; }
+.popup-flowers .bloom-stage { height: clamp(400px, 52vw, 550px); }
+.garden-petals { position: absolute; inset: 0; pointer-events: none; overflow: clip; }
+.garden-petal { position: absolute; bottom: 21%; left: calc(50% - 5px); width: 10px; height: 17px; visibility: hidden; opacity: 0; background: #cf8ca7; border-radius: 80% 15% 75% 25%; }
+.garden-petal--1 { width: 9px; height: 14px; background: #dfaa88; }
+.garden-petal--2 { width: 8px; height: 13px; background: #c9ab71; }
+@media (max-width: 760px) {
+  .site-header { gap: 10px; }
+  .popup-theatre { padding: 0 7px 24px; }
+  .popup-flowers .bloom-stage { height: clamp(355px, 105vw, 465px); }
+  .garden-petal { width: 8px; height: 12px; }
+}
+
+/* Fit the flower scene to the available viewport, keeping its controls in view. */
+.app-shell:has(.popup-gift) {
+  height: 100dvh;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+.app-shell:has(.popup-gift) .site-header { padding-block: clamp(8px, 1.8dvh, 22px); }
+.app-shell:has(.popup-gift) .site-footer { padding-block: 6px; gap: 4px; font-size: 12px; }
+.app-shell:has(.popup-gift) .site-footer > span:first-child { font-size: 12px; }
+.app-shell:has(.popup-gift) .keepsake-reveal { height: 100%; min-height: 0; padding-top: 44px; padding-bottom: 4px; }
+.app-shell .popup-gift { height: 100%; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); gap: 6px; }
+.app-shell .popup-gift > .letter-back { top: -44px; }
+.app-shell .popup-gift .gift-heading h1 { font-size: clamp(32px, 5dvh, 60px); margin: 0 0 8px; }
+.app-shell .popup-gift .gift-heading p { font-size: 13px; line-height: 1.6; }
+.app-shell .popup-gift .flower-gift { height: 100%; min-height: 0; min-width: 0; justify-self: center; display: grid; grid-template-rows: minmax(0, 1fr) auto; }
+.app-shell .popup-gift .popup-theatre { height: 100%; min-height: 0; padding-bottom: 24px; container-type: size; overflow: clip; }
+.app-shell .popup-gift .garden-parallax { height: 100%; width: min(100%, 205cqh); margin-inline: auto; }
+.app-shell .popup-gift .popup-flowers, .app-shell .popup-gift .bloom-stage { height: 100%; min-height: 0; }
+.app-shell .popup-gift .popup-book { bottom: 4px; height: clamp(80px, 37%, 250px); }
+.app-shell .popup-gift figcaption { padding-top: 0; }
+.app-shell .popup-gift figcaption > p { font-size: clamp(16px, 2.4dvh, 22px); line-height: 1.25; margin-bottom: 0; }
+.app-shell .popup-gift .replay-flowers { margin-top: 0; }
+@media (max-height: 650px) {
+  .app-shell:has(.popup-gift) .site-header { padding-block: 8px; }
+  .app-shell:has(.popup-gift) .site-footer { padding-block: 4px; gap: 2px; font-size: 11px; }
+  .app-shell:has(.popup-gift) .site-footer > span:first-child { font-size: 11px; }
+  .app-shell .popup-gift .gift-heading h1 { font-size: clamp(28px, 5dvh, 36px); margin-bottom: 5px; }
+  .app-shell .popup-gift .popup-theatre { padding-bottom: 18px; }
+}
+@media (max-height: 520px) and (min-width: 480px) {
+  .app-shell .popup-gift { grid-template-columns: minmax(150px, .7fr) minmax(0, 1.3fr); grid-template-rows: minmax(0, 1fr); align-items: center; gap: 16px; }
+  .app-shell .popup-gift .gift-heading h1 br { display: block; }
+  .app-shell .popup-gift .gift-heading h1 { font-size: clamp(28px, 5vw, 40px); }
+  .app-shell .popup-gift figcaption > p { font-size: 16px; max-width: none; }
+}
+
+/* Keep edge blossoms within a narrow or tall canvas as its aspect changes. */
+@media (min-width: 761px) {
+  .popup-gift .garden-sprig--left-outer { --sprig-x: max(-75cqmin, -41cqw) !important; }
+  .popup-gift .garden-sprig--right-outer { --sprig-x: min(75cqmin, 41cqw) !important; }
+  .popup-gift .garden-sprig--left-inner { --sprig-x: max(-45cqmin, -27cqw) !important; }
+  .popup-gift .garden-sprig--right-inner { --sprig-x: min(45cqmin, 27cqw) !important; }
+}
+
+/* The idle hint moves its own wrapper, leaving page-turn and unseal transforms free. */
+.envelope-tease { position: relative; transform-origin: 50% 65%; }
+.envelope-tease .ribbon-tail { transform-origin: center top; }
+
+/* Every chapter shares one viewport; content, artwork and controls size to its middle row. */
+html, body, #root { height: 100%; }
+.app-shell { height: 100dvh; min-height: 0; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
+.site-header { padding-block: clamp(8px, 1.8dvh, 22px); }
+.site-footer { padding-block: 6px; gap: 4px; font-size: 12px; }
+.site-footer > span:first-child { font-size: 12px; }
+.invitation-layout { height: 100%; min-height: 0; min-width: 0; margin: 0 auto; gap: clamp(28px, 6vw, 90px); padding-block: 8px; }
+.illustration-panel { height: min(100%, 700px); min-height: 0; padding: 0; display: grid; grid-template-rows: minmax(0, 1fr) auto; }
+.garden-art-frame { height: 100%; min-height: 0; max-height: none; aspect-ratio: auto; }
+.illustration-caption { margin: 10px 0 0; font-size: 16px; }
+.invitation-panel { min-height: 0; padding: 0; }
+.invitation-copy h1 { font-size: clamp(40px, 7dvh, 70px); margin-bottom: clamp(10px, 1.5dvh, 20px); letter-spacing: -.035em; }
+.invitation-copy > p { font-size: 14px; line-height: 1.65; margin-bottom: 14px; }
+.pin-label { margin-bottom: 8px; }
+.otp-slot { height: clamp(44px, 6dvh, 58px); }
+.pin-helper { font-size: 13px; line-height: 1.4; margin: 8px 0; }
+.number-pad { row-gap: 2px; }
+.number-pad > button { height: 44px; font-size: 29px; }
+.pin-message { min-height: 22px; font-size: 12px; line-height: 1.4; margin: 5px 0; }
+.primary-button { min-height: 44px; padding-block: 10px; }
+.help-link { min-height: 36px; margin-top: 4px; }
+.keepsake-reveal { height: 100%; min-height: 0; padding-top: 44px; padding-bottom: 4px; }
+.letter-scene { height: 100%; min-height: 0; display: grid; grid-template-rows: minmax(0, 1fr) auto; }
+.letter-stage { height: 100%; min-height: 0; padding: 8px 12px 20px; container-type: size; overflow: clip; }
+.letter-book { height: 100%; }
+.letter-art-page, .letter-paper, .book-page-stack, .turning-leaf { min-height: 0; }
+.letter-art-page { padding: clamp(18px, 4cqh, 36px); }
+.art-page-content { min-height: 0; }
+.letter-art-window { min-height: 0; }
+.art-page-content > p { font-size: clamp(20px, 4.5cqh, 29px); margin: 18px 0 12px; }
+.letter-paper { padding: clamp(14px, 3.5cqh, 34px); }
+.wishes-paper { height: 100%; display: flex; flex-direction: column; }
+.letter-ornament { margin-bottom: clamp(8px, 2cqh, 20px); }
+.letter-paper h1 { font-size: clamp(28px, 7cqh, 46px); margin-bottom: clamp(10px, 2.5cqh, 24px); }
+.wish-body > p { color: var(--ink); font-size: clamp(13.5px, 3.5cqh, 16px); line-height: 1.6; margin: 0 0 clamp(8px, 2cqh, 17px); }
+.wish-body .letter-signature { font: 400 clamp(18px, 4cqh, 24px)/1.1 var(--display); color: var(--rose-dark); margin: clamp(8px, 2cqh, 22px) 0; }
+.letter-action { margin-top: auto; padding-top: 6px; }
+.turn-page { min-height: 44px; font-size: clamp(20px, 4.5cqh, 25px); }
+.page-corner { bottom: calc(-1 * clamp(14px, 3.5cqh, 34px)); right: calc(-1 * clamp(14px, 3.5cqh, 34px)); }
+.letter-postscript { min-height: 28px; }
+.letter-postscript > p { font-size: 16px; line-height: 1.35; max-width: none; }
+.previous-wish { min-height: 32px; padding: 4px 0; background: transparent; border: 0; color: var(--muted); font-size: 12px; }
+.secret-paper h2 { font-size: clamp(28px, 7cqh, 43px); margin-bottom: clamp(8px, 2cqh, 20px); }
+.secret-paper > p { font-size: 13px; line-height: 1.55; }
+.envelope-wrap { width: min(320px, 53cqh, 100%); margin: clamp(16px, 5cqh, 38px) auto 10px; }
+.envelope-instruction { margin-top: 53px; font-size: 13px; line-height: 1.55; }
+.previous-page { margin-top: 0; }
+.letter-cover-front > p { font-size: clamp(36px, 9cqh, 63px); margin-block: 22px; }
+.help-dialog { max-height: calc(100dvh - 24px); padding: 30px 28px 22px; }
+@media (max-width: 760px) {
+  .invitation-layout { width: 90%; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; gap: 10px; padding-block: 4px; }
+  .illustration-panel { width: 100%; max-width: 460px; justify-self: center; }
+  .garden-art-frame { border-radius: 45% 45% 5px 5px / 48% 48% 5px 5px; }
+  .illustration-caption { margin-top: 5px; font-size: 14px; }
+  .invitation-panel { max-width: 350px; }
+  .invitation-copy h1 { font-size: clamp(30px, 5.2dvh, 44px); margin-bottom: 10px; }
+  .invitation-copy > p { font-size: 13px; line-height: 1.5; margin-bottom: 10px; }
+  .pin-form { width: 100%; }
+  .keypad-toggle { min-height: 44px; }
+  .number-pad { grid-template-columns: repeat(3, 44px); column-gap: 24px; }
+  .invitation-layout:has(.number-pad[data-mobile-open="true"]) .illustration-panel { display: none; }
+  .invitation-layout:has(.number-pad[data-mobile-open="true"]) { display: grid; place-items: center; grid-template-rows: minmax(0, 1fr); }
+  .invitation-panel:has(.number-pad[data-mobile-open="true"]) .invitation-copy > p { display: none; }
+  .is-compact-reading .letter-ornament { display: none; }
+  .is-compact-reading .letter-action > p { display: none; }
+  .secret-paper { padding-top: 18px; padding-bottom: 14px; }
+}
+@media (max-height: 650px) {
+  .site-header { padding-block: 8px; }
+  .site-footer { padding-block: 4px; gap: 2px; font-size: 11px; }
+  .site-footer > span:first-child { font-size: 11px; }
+  .keepsake-reveal { padding-top: 40px; }
+  .illustration-caption { display: none; }
+  .letter-postscript > p { font-size: 13px; }
+  .letter-action > p { display: none; }
+  .envelope-instruction { font-size: 12px; }
+}
+@media (max-width: 760px) and (max-height: 520px) {
+  .invitation-copy h1 { font-size: 28px; }
+  .invitation-copy h1 br { display: none; }
+  .invitation-layout:has(.number-pad[data-mobile-open="true"]) .pin-form { display: grid; grid-template-columns: minmax(0, 1fr) 132px; column-gap: 8px; }
+  .pin-form:has(.number-pad[data-mobile-open="true"]) .pin-label { grid-area: 1 / 1 / 2 / 3; }
+  .pin-form:has(.number-pad[data-mobile-open="true"]) .otp-container { grid-area: 2 / 1 / 3 / 3; }
+  .pin-form:has(.number-pad[data-mobile-open="true"]) .pin-helper { grid-area: 3 / 1 / 4 / 3; }
+  .pin-form:has(.number-pad[data-mobile-open="true"]) .keypad-toggle { grid-area: 4 / 1 / 5 / 3; }
+  .pin-form:has(.number-pad[data-mobile-open="true"]) .number-pad { grid-area: 5 / 2 / 8 / 3; column-gap: 0; }
+  .pin-form:has(.number-pad[data-mobile-open="true"]) .pin-message { grid-area: 5 / 1 / 6 / 2; }
+  .pin-form:has(.number-pad[data-mobile-open="true"]) .primary-button { grid-area: 6 / 1 / 7 / 2; padding-inline: 8px; gap: 6px; }
+  .pin-form:has(.number-pad[data-mobile-open="true"]) .help-link { grid-area: 7 / 1 / 8 / 2; font-size: 12px; }
+}
+@media (max-height: 650px) and (min-width: 761px), (max-height: 520px) and (min-width: 480px) and (orientation: landscape) {
+  .invitation-layout { display: grid; grid-template-columns: minmax(0, 1fr); width: 92%; place-items: center; }
+  .invitation-layout .illustration-panel { display: none; }
+  .invitation-panel { width: 100%; max-width: 940px; display: grid; grid-template-columns: minmax(150px, .8fr) minmax(0, 1.6fr); gap: 20px; align-items: center; text-align: left; }
+  .invitation-copy h1 { font-size: clamp(28px, 4vw, 44px); }
+  .invitation-copy > p { font-size: 13px; margin-bottom: 0; }
+  .invitation-panel .pin-form { max-width: none; display: grid; grid-template-columns: minmax(0, 1fr) 132px; gap: 2px 12px; }
+  .invitation-panel .pin-label { grid-area: 1 / 1 / 2 / 2; font-size: 12px; justify-content: flex-start; margin: 0; }
+  .invitation-panel .otp-container { grid-area: 2 / 1 / 3 / 2; }
+  .invitation-panel .otp-group { gap: 6px; }
+  .invitation-panel .number-pad { display: grid; grid-area: 1 / 2 / 6 / 3; grid-template-columns: repeat(3, 44px); gap: 0; }
+  .invitation-panel .pin-helper, .invitation-panel .keypad-toggle { display: none; }
+  .invitation-panel .pin-message { grid-area: 3 / 1 / 4 / 2; min-height: 16px; margin: 0; }
+  .invitation-panel .primary-button { grid-area: 4 / 1 / 5 / 2; gap: 6px; padding-inline: 8px; }
+  .invitation-panel .help-link { grid-area: 5 / 1 / 6 / 2; margin: 0; }
+  .letter-ornament { display: none; }
+  .storybook:not(.is-compact-reading) .art-page-content { visibility: hidden !important; }
+  .storybook:not(.is-compact-reading) .wishes-paper h1 { position: absolute; right: calc(100% + 14px); top: 12px; width: calc(100% - 28px); font-size: 28px; }
+  .storybook:not(.is-compact-reading) .wish-paragraph-first { position: absolute; right: calc(100% + 14px); top: 54px; width: calc(100% - 28px); }
+  .wish-body > p { font-size: 13px; line-height: 1.5; }
+  .wish-body .letter-signature { font-size: 18px; margin-block: 5px; }
+  .letter-signature br { display: none; }
+  .letter-paper { padding: 10px 14px; }
+  .secret-paper > p { display: none; }
+  .secret-paper h2 { position: absolute; right: calc(100% + 14px); top: 8px; width: calc(100% - 28px); font-size: 28px; }
+  .secret-paper .envelope-wrap { width: min(80cqh, 90%); margin: 0; transform: translateY(-24px); }
+  .secret-paper .envelope-instruction { position: absolute; right: calc(100% + 14px); top: 78px; width: calc(100% - 28px); margin: 0; }
+  .secret-paper .previous-page { position: absolute; right: calc(100% + 14px); bottom: 4px; width: calc(100% - 28px); }
+  .storybook.is-last-page .secret-dedication { visibility: hidden !important; }
+  .help-dialog { padding: 20px 24px 16px; }
+  .dialog-heart { display: none; }
+  .help-dialog h2 { font-size: 28px; margin-bottom: 10px; }
+  .help-dialog > p { font-size: 13px; line-height: 1.5; }
+  .help-dialog .hint-example { margin-block: 10px; }
+}
+
+@media (max-height: 650px) and (min-width: 761px), (max-height: 520px) and (min-width: 480px) and (orientation: landscape) {
+  .site-footer { flex-direction: row; justify-content: space-between; }
+  .letter-book { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); max-width: 960px; }
+  .letter-art-page { display: flex; }
+  .letter-stage { padding: 4px 8px 16px; }
+  .letter-postscript { min-height: 18px; }
+  .letter-postscript > p { font-size: 12px; }
+  .wish-body .letter-signature { position: absolute; right: calc(100% + 14px); bottom: 8px; width: calc(100% - 28px); margin: 0; }
+}
+.invitation-copy h1 { font-size: clamp(38px, 6.1dvh, 64px); margin-bottom: 10px; }
+.invitation-copy > p { line-height: 1.5; margin-bottom: 10px; }
+.pin-helper { margin-block: 6px; }
+@media (max-width: 760px) {
+  .invitation-copy h1 { font-size: clamp(30px, 5.2dvh, 44px); }
+  .invitation-panel:has(.number-pad[data-mobile-open="true"]) .invitation-copy h1 { font-size: 28px; }
+  .invitation-panel:has(.number-pad[data-mobile-open="true"]) .invitation-copy h1 br { display: none; }
+}
+@media (max-width: 760px) and (max-height: 600px) and (orientation: portrait) {
+  .invitation-layout .illustration-panel { display: none; }
+  .invitation-layout { grid-template-rows: minmax(0, 1fr); place-items: center; gap: 0; }
+}
+@media (min-width: 761px) and (max-height: 780px) and (min-height: 521px) {
+  .invitation-panel .pin-form { max-width: none; display: grid; grid-template-columns: minmax(0, 1fr) 132px; gap: 2px 12px; }
+  .invitation-panel .pin-label { grid-area: 1 / 1 / 2 / 2; margin: 0; }
+  .invitation-panel .otp-container { grid-area: 2 / 1 / 3 / 2; }
+  .invitation-panel .otp-group { gap: 6px; }
+  .invitation-panel .pin-helper { grid-area: 3 / 1 / 4 / 2; }
+  .invitation-panel .pin-message { grid-area: 4 / 1 / 5 / 2; }
+  .invitation-panel .primary-button { grid-area: 5 / 1 / 6 / 2; gap: 6px; padding-inline: 8px; }
+  .invitation-panel .help-link { grid-area: 6 / 1 / 7 / 2; margin: 0; }
+  .invitation-panel .number-pad { grid-area: 1 / 2 / 7 / 3; grid-template-columns: repeat(3, 44px); column-gap: 0; }
+}
+
+/* Explicit tracks let the hidden envelope page shrink with the visible page. */
+.book-page-stack, .turning-leaf { height: 100%; grid-template-rows: minmax(0, 1fr); }
+.letter-action:has(.previous-wish) { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 6px; align-items: end; }
+.previous-wish { width: 44px; min-height: 44px; display: grid; place-items: center; padding: 0; }
+.letter-cover-front { padding: clamp(12px, 3cqh, 32px); }
+.letter-cover-front > p { font-size: clamp(24px, 8cqh, 60px); margin-block: clamp(8px, 2cqh, 22px); }
+.letter-cover-front > svg:first-child { width: clamp(24px, 6cqh, 46px); height: clamp(24px, 6cqh, 46px); }
+@media (max-height: 650px) { .letter-cover-front > svg:last-child { display: none; } }
+@media (max-width: 760px) and (max-height: 520px) and (orientation: portrait) {
+  .secret-paper { padding: 12px 14px; }
+  .secret-paper > p { display: none; }
+  .secret-paper h2 { font-size: 28px; margin-bottom: 8px; }
+  .secret-paper .envelope-wrap { width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 12px; margin: 8px 0 26px; }
+  .secret-paper .envelope-instruction { margin: 0; font-size: 12px; line-height: 1.5; }
+  .secret-paper .ribbon-tail { height: 40px; }
+}
+
+/* A stable caption track prevents every page and cqh-sized element jumping at completion. */
+.letter-scene { grid-template-rows: minmax(0, 1fr) 28px; }
+.letter-postscript { height: 28px; min-height: 28px; display: grid; place-items: center; }
+.skip-letter { min-height: 28px; padding-block: 0; }
+.letter-cover { z-index: 9; }
+.letter-cover, .turning-leaf { will-change: transform; }
+
+/* A handful of balloons float through the outer edges after the book unfolds. */
+.gift-balloons { position: absolute; inset: 0; overflow: clip; pointer-events: none; z-index: 2; }
+.gift-balloon { position: absolute; bottom: 0; width: clamp(28px, 4vw, 52px); height: auto; color: #d9a0b3; opacity: 0; visibility: hidden; }
+.gift-balloon--1 { color: #ddbc80; }
+.gift-balloon--2 { color: #b1bfa1; }
+
+/* Compact wishes turn as a complete sheet, in both directions, around the same spine. */
+.wish-turn-layer { position: absolute; inset: 0; z-index: 6; perspective: 1800px; pointer-events: none; }
+.wish-turn-sheet { position: absolute; inset: 0; transform-origin: left center; transform-style: preserve-3d; }
+.wish-turn-sheet > .wishes-paper { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.wish-turn-back { position: absolute; inset: 0; display: grid; place-items: center; color: #ba9587; background: #f7ecdf; box-shadow: inset 9px 0 17px #8a69551a, -10px 5px 22px #57454b1c; transform: rotateY(180deg); backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.wish-turn-shadow { position: absolute; inset: 0; opacity: 0; background: #70554a; backface-visibility: hidden; -webkit-backface-visibility: hidden; pointer-events: none; }

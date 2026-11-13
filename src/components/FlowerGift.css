@@ -1,0 +1,57 @@
+/* A hinged paper object: the cover and page stack turn together around the spine. */
+.crafted-gift:focus { outline: none; }
+.app-shell .crafted-gift .popup-theatre { overflow: clip; padding-bottom: 12px; perspective: 1800px; }
+.app-shell .crafted-gift .garden-parallax { width: min(100%, 190cqh); transform-origin: center 80%; }
+.crafted-gift .popup-book { left: 6%; right: 6%; bottom: 24px; height: clamp(110px, 38%, 250px); display: block; transform: rotateX(48deg); transform-origin: center bottom; transform-style: preserve-3d; z-index: 1; }
+.app-shell .crafted-gift .popup-book { bottom: 24px; height: clamp(110px, 38%, 250px); }
+.crafted-gift .popup-book > .popup-page { position: absolute; top: 0; bottom: 0; width: 50%; background: transparent; box-shadow: none; border-radius: 0; transform-style: preserve-3d; }
+.crafted-gift .popup-book > .popup-page--left { left: 0; transform: rotateY(-5deg); transform-origin: right center; z-index: 2; }
+.crafted-gift .popup-book > .popup-page--right { right: 0; transform: rotateY(5deg); transform-origin: left center; }
+.popup-page-stock { position: absolute; inset: 3px -3px -9px; background: #e4d2bd; border-radius: 5px; transform: translateZ(-5px); box-shadow: 0 2px #fff6e8, 0 3px #cbbb9e, 0 5px #fff7e9, 0 6px #d6c2a7, 0 8px #f3e5cd, 0 11px #985c70, 0 14px #774657; }
+.popup-page--left .popup-page-stock { right: 0; border-radius: 7px 0 0 5px; }
+.popup-page--right .popup-page-stock { left: 0; border-radius: 0 7px 5px 0; }
+.popup-page-face { position: absolute; inset: 0; background: #fffbf1; backface-visibility: hidden; -webkit-backface-visibility: hidden; overflow: hidden; }
+.popup-page-face--left { border-radius: 7px 0 0 5px; background: linear-gradient(90deg, #f4ead7, #fffaf0 12%, #fffcf5 76%, #e1d1b6); }
+.popup-page-face--right { border-radius: 0 7px 5px 0; background: linear-gradient(90deg, #d3bfa4, #f6ecdb 7%, #fffaf0 28%, #fffdf7 88%, #f2e5d1); }
+.popup-page-face::after { content: ''; position: absolute; inset: 12px; border: 1px solid #bd9b6c29; border-radius: 2px; pointer-events: none; }
+.popup-book-cover { position: absolute; inset: -3px -4px -10px; border-radius: 7px; background: #92566b; color: #f0d7af; transform: rotateY(180deg) translateZ(7px); backface-visibility: hidden; -webkit-backface-visibility: hidden; box-shadow: inset 10px 0 14px #49263233; padding: 13px; }
+.popup-cover-frame { height: 100%; border: 1px solid #e2b98a80; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px; text-align: center; }
+.popup-cover-frame > span { font: 400 clamp(19px, 3cqh, 29px)/1.1 var(--display); }
+.popup-cover-frame em { font-weight: 400; }
+.popup-cover-frame > svg:last-child { width: 13px; }
+.popup-page-dedication { position: absolute; left: 12%; bottom: 24%; color: #8d6a60; font: 400 clamp(11px, 2cqh, 19px)/1.25 var(--display); transform: rotate(-3deg); }
+.popup-page-dedication em { font-weight: 400; }
+.popup-page-inscription { position: absolute; right: 12%; bottom: 22%; display: flex; align-items: center; flex-direction: column; gap: 7px; color: #8d6a60; font: italic clamp(11px, 2cqh, 19px)/1.2 var(--display); transform: rotate(3deg); }
+.popup-page-number { position: absolute; bottom: 8%; color: #a99277; font: 400 10px/1 var(--display); }
+.popup-page--left .popup-page-number { left: 10%; }
+.popup-page--right .popup-page-number { right: 10%; }
+.popup-book-gutter { position: absolute; left: calc(50% - 7px); top: 2%; bottom: -2%; width: 14px; background: linear-gradient(90deg, #c3a88a00, #b0936a8c 43%, #f2dfbb 53%, #c3a88a00); transform: translateZ(2px); }
+.popup-book-ribbon { position: absolute; left: 61%; top: 57%; width: 13px; height: 68%; background: #9c6074; box-shadow: inset 2px 0 #b67c8e; transform: translateZ(4px) rotate(-9deg); transform-origin: center top; clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 92%, 0 100%); }
+.popup-book-shadow { position: absolute; bottom: 8px; left: 8%; right: 8%; height: 13%; background: radial-gradient(ellipse, #62483e40, #62483e00 70%); transform-origin: center; }
+.crafted-gift .popup-flower-rise { position: absolute; inset: 0 0 13%; transform-origin: center bottom; z-index: 2; }
+.app-shell .crafted-gift .popup-flowers { position: absolute; inset: 0; height: 100%; }
+.app-shell .crafted-gift .bloom-stage { height: 100%; }
+.crafted-gift .popup-flowers .flower__line { background-image: linear-gradient(to left, #4d683f40, transparent, #ffffff30), linear-gradient(to top, #657f52, #94ad7b); }
+.crafted-gift .popup-flowers .flower__grass__overlay { background: transparent; }
+.crafted-gift .garden-petal { bottom: 24%; }
+@media (max-width: 760px) {
+ .app-shell .crafted-gift .popup-book { left: 2%; right: 2%; bottom: 22px; height: 33%; min-height: 85px; }
+ .popup-book-cover { padding: 8px; }
+ .popup-cover-frame { gap: 5px; }
+ .popup-cover-frame > svg:first-child { width: 23px; height: 23px; }
+ .popup-cover-frame > svg:last-child { display: none; }
+ .popup-cover-frame > span { font-size: 17px; }
+ .popup-page-face::after { inset: 7px; }
+ .popup-page-dedication { font-size: 12px; left: 10%; }
+ .popup-page-inscription { font-size: 12px; right: 10%; gap: 3px; }
+ .popup-page-inscription > svg { width: 15px; height: 15px; }
+ .popup-book-ribbon { width: 9px; }
+ .crafted-gift .popup-flower-rise { bottom: 14%; }
+}
+@media (max-height: 520px) {
+ .popup-cover-frame { gap: 4px; }
+ .popup-cover-frame > svg { display: none; }
+ .popup-page-inscription > svg { display: none; }
+ .popup-page-dedication, .popup-page-inscription { font-size: 11px; }
+ .popup-page-number { display: none; }
+}

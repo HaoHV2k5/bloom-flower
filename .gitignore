@@ -1,0 +1,7 @@
+.taste-skill/
+node_modules/
+dist/
+.vite/
+.DS_Store
+.vercel/
+.env*.local
