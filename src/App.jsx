@@ -129,6 +129,7 @@ export default function App() {
   const [screen, setScreen] = useState('envelope');
   const audio = useRef(null);
   const preference = useRef(true);
+  const invitationOpened = useRef(false);
   const root = useRef(null);
   useEffect(() => { setMotionPaused(reducedMotion); }, [reducedMotion]);
   useGSAP(() => {
@@ -141,19 +142,26 @@ export default function App() {
     });
   }, { scope: root, dependencies: [screen, reducedMotion, motionPaused], revertOnUpdate: true });
   const playMusic = useCallback(async (reportFailure = true) => {
-    if (!preference.current || !audio.current || !audio.current.paused) return;
+    if (!preference.current || !invitationOpened.current || !audio.current) return;
     try {
       audio.current.volume = .24;
-      await audio.current.play();
+      audio.current.muted = false;
+      if (audio.current.paused) await audio.current.play();
       setAudioMessage('');
     } catch {
       if (reportFailure && preference.current) setAudioMessage('Chạm vào nốt nhạc để nghe một chút dịu dàng nhé.');
     }
   }, []);
+  const prepareMusic = useCallback(() => {
+    if (!preference.current || !audio.current) return;
+    // Authorize playback in the opening click, keeping music silent until the PIN.
+    audio.current.muted = true;
+    audio.current.currentTime = 0;
+    void audio.current.play().catch(() => {});
+  }, []);
   useEffect(() => {
-    // Retry during a user gesture when the browser blocks autoplay on arrival.
+    // Only retry after the letter has opened; arbitrary clicks cannot start music.
     const startMusic = () => { void playMusic(false); };
-    startMusic();
     document.addEventListener('click', startMusic);
     document.addEventListener('keydown', startMusic);
     return () => {
@@ -168,7 +176,18 @@ export default function App() {
     if (enabled) void playMusic();
     else { audio.current.pause(); setAudioMessage(''); }
   }
-  const openInvitation = useCallback(() => setScreen('invitation'), []);
+  const openInvitation = useCallback(() => {
+    invitationOpened.current = true;
+    setScreen('invitation');
+    if (audio.current) audio.current.currentTime = 0;
+    void playMusic();
+  }, [playMusic]);
+  const returnToEnvelope = useCallback(() => {
+    invitationOpened.current = false;
+    audio.current?.pause();
+    setAudioMessage('');
+    setScreen('envelope');
+  }, []);
   const returnToInvitation = useCallback(() => {
     setScreen('invitation');
   }, []);
@@ -182,14 +201,14 @@ export default function App() {
       onPointerDownCapture={sounds.prime} onKeyDownCapture={sounds.prime}
       onClickCapture={event => { const control = event.target.closest('button, a'); if (control && !control.disabled && control.dataset.sound !== 'none') sounds.play('tap'); }}>
       <header className="site-header">
-        <a className="wordmark" href="#" onClick={event => { event.preventDefault(); setScreen('envelope'); }} aria-label="Dear you, về phong thư"><Flower2 size={25} strokeWidth={1.1} />dear you<span>.</span></a>
+        <a className="wordmark" href="#" onClick={event => { event.preventDefault(); returnToEnvelope(); }} aria-label="Dear you, về phong thư"><Flower2 size={25} strokeWidth={1.1} />dear you<span>.</span></a>
         <div className="header-controls"><span className="header-note">một chút dịu dàng, gửi Huyền Trang</span>
           <IconButton label={motionPaused ? 'Bật chuyển động' : 'Tạm dừng chuyển động'} aria-pressed={motionPaused} onClick={() => setMotionPaused(value => !value)}>{motionPaused ? <Play size={17} strokeWidth={1.5} /> : <Pause size={17} strokeWidth={1.5} />}</IconButton>
           <IconButton label={musicEnabled ? 'Tắt nhạc' : 'Bật nhạc'} aria-pressed={musicEnabled} onClick={toggleMusic}>{musicEnabled ? <Music2 size={18} strokeWidth={1.5} /> : <VolumeX size={18} strokeWidth={1.5} />}</IconButton>
           <IconButton label={sounds.enabled ? 'Tắt âm thanh hiệu ứng' : 'Bật âm thanh hiệu ứng'} aria-pressed={sounds.enabled} data-sound="none" onClick={sounds.toggle}>{sounds.enabled ? <Volume2 size={18} strokeWidth={1.5} /> : <VolumeX size={18} strokeWidth={1.5} />}</IconButton>
         </div>
       </header>
-      {screen === 'envelope' ? <EntranceEnvelope onOpen={openInvitation} reducedMotion={reducedMotion} paused={motionPaused} playSound={sounds.play} /> : screen === 'wishes' ? <GardenReveal onBack={returnToInvitation} reducedMotion={reducedMotion} paused={motionPaused} playSound={sounds.play} /> : <main className="invitation-layout"><GardenIllustration/><PinInvitation reducedMotion={reducedMotion || motionPaused} onUnlock={unlock}/></main>}
+      {screen === 'envelope' ? <EntranceEnvelope onOpenStart={prepareMusic} onOpen={openInvitation} reducedMotion={reducedMotion} paused={motionPaused} playSound={sounds.play} /> : screen === 'wishes' ? <GardenReveal onBack={returnToInvitation} reducedMotion={reducedMotion} paused={motionPaused} playSound={sounds.play} /> : <main className="invitation-layout"><GardenIllustration/><PinInvitation reducedMotion={reducedMotion || motionPaused} onUnlock={unlock}/></main>}
       <ButterflyField paused={motionPaused} reducedMotion={reducedMotion} />
       <footer className="site-footer"><span>Một khoảng trời nhỏ, em gửi chị.</span><span>made with a little love <Heart size={12} strokeWidth={1.25} /></span></footer>
       <audio ref={audio} className="song" src={`${import.meta.env.BASE_URL}assets/hbd.mp3`} loop preload="auto" />

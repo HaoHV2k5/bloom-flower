@@ -6,9 +6,10 @@ import './EntranceEnvelope.css';
 
 gsap.registerPlugin(useGSAP);
 
-export default function EntranceEnvelope({ onOpen, reducedMotion, paused, playSound }) {
+export default function EntranceEnvelope({ onOpenStart, onOpen, reducedMotion, paused, playSound }) {
   const root = useRef(null);
   const flight = useRef(null);
+  const hovering = useRef(null);
   const opening = useRef(null);
   const locked = useRef(false);
   const motion = useRef({ reducedMotion, paused });
@@ -16,16 +17,22 @@ export default function EntranceEnvelope({ onOpen, reducedMotion, paused, playSo
   const [isOpening, setIsOpening] = useState(false);
 
   const { contextSafe } = useGSAP(() => {
-    if (reducedMotion || paused) return;
-    // The letter arrives as one physical object, then waits for the recipient.
-    flight.current = gsap.timeline({ defaults: { ease: 'power3.out' } })
+    // Arrival and gentle hovering use separate targets so opening can settle the paper.
+    flight.current = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } })
       .from('.arrival-flight', { x: () => -Math.min(window.innerWidth * .7, 720), y: () => window.innerHeight * .38, rotation: -24, scale: .72, duration: 1.35 }, 0)
       .from('.arrival-copy', { autoAlpha: 0, y: 12, duration: .7 }, .3)
       .from('.arrival-instruction', { autoAlpha: 0, y: 7, duration: .55 }, .95);
+    hovering.current = gsap.to('.arrival-envelope', {
+      y: -10, rotation: 1.4, duration: 2.4, repeat: -1, yoyo: true,
+      ease: 'sine.inOut', paused: true,
+    });
+    if (motion.current.reducedMotion || motion.current.paused) flight.current.progress(1);
   }, { scope: root });
 
   useEffect(() => {
     const sync = () => {
+      if (reducedMotion) hovering.current?.pause(0);
+      else hovering.current?.paused(paused || document.hidden || locked.current);
       for (const timeline of [flight.current, opening.current]) {
         if (!timeline) continue;
         if (reducedMotion) timeline.progress(1);
@@ -37,18 +44,22 @@ export default function EntranceEnvelope({ onOpen, reducedMotion, paused, playSo
     return () => document.removeEventListener('visibilitychange', sync);
   }, [paused, reducedMotion]);
 
-  const openLetter = contextSafe(() => {
+  const openLetter = contextSafe(event => {
     if (locked.current) return;
     locked.current = true;
     setIsOpening(true);
+    onOpenStart();
     flight.current?.progress(1);
-    playSound('seal');
+    hovering.current?.pause();
+    playSound('seal', event);
     if (motion.current.reducedMotion || motion.current.paused) { onOpen(); return; }
     opening.current = gsap.timeline({ defaults: { ease: 'power2.inOut' }, onComplete: onOpen })
+      .to('.arrival-envelope', { y: 0, rotation: 0, duration: .25 }, 0)
       .to('.arrival-seal', { y: 12, scale: .8, autoAlpha: 0, duration: .25 }, 0)
       .to('.arrival-flap', { rotationX: 180, duration: .8, ease: 'power2.inOut' }, .15)
       .set('.arrival-flap', { zIndex: 1 }, .57)
       .to('.arrival-letter', { yPercent: -62, duration: .85, ease: 'power3.out' }, .65)
+      .call(() => playSound('page'), [], .65)
       .to('.arrival-instruction', { autoAlpha: 0, duration: .2 }, .1)
       .to('.arrival-copy', { autoAlpha: 0, y: -8, duration: .3 }, .1)
       .to('.arrival-flight', { y: 30, autoAlpha: 0, duration: .35 }, 1.45);

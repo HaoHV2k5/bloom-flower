@@ -26,10 +26,12 @@ export default function useInteractionSounds() {
         engine.current = { context, master, noise, voices: new Set() };
       }
       const { context } = engine.current;
-      if (context.state === 'suspended') void context.resume().catch(() => {});
+      if (context.state === 'suspended') return context.resume().catch(() => {});
     } catch { /* Audio is optional; the book remains fully usable. */ }
   }, []);
-  const play = useCallback((kind = 'tap') => {
+  const play = useCallback(async (kind = 'tap', event) => {
+    // A first click (including keyboard/assistive activation) must finish resuming audio.
+    if (event) await prime(event);
     const audio = engine.current;
     if (!enabledRef.current || !audio || audio.context.state !== 'running' || document.hidden) return;
     const { context, master, noise, voices } = audio;
@@ -72,7 +74,7 @@ export default function useInteractionSounds() {
       });
     } else if (kind === 'unlock') { tone(523.25, 0, .45, .025); tone(783.99, .12, .6, .022); }
     else { tone(740, 0, .075, .018); }
-  }, []);
+  }, [prime]);
   const toggle = useCallback(event => {
     const next = !enabledRef.current;
     enabledRef.current = next;
