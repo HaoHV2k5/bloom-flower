@@ -1,12 +1,51 @@
 import { useEffect, useRef, useState } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { Flower2, Heart } from 'lucide-react';
+import { Flower2, Heart, Mail } from 'lucide-react';
 import './EntranceEnvelope.css';
 
 gsap.registerPlugin(useGSAP);
 
-export default function EntranceEnvelope({ onOpenStart, onOpen, reducedMotion, paused, playSound }) {
+export default function EntranceEnvelope({ primeSound, ...props }) {
+  const [receiving, setReceiving] = useState(false);
+  const [received, setReceived] = useState(false);
+  const requested = useRef(false);
+  const mounted = useRef(false);
+
+  useEffect(() => {
+    mounted.current = true;
+    return () => { mounted.current = false; };
+  }, []);
+
+  async function receiveLetter(event) {
+    if (requested.current) return;
+    requested.current = true;
+    setReceiving(true);
+    try {
+      // Resume audio inside this click before mounting the flight animation.
+      await primeSound(event);
+    } catch { /* Receiving the letter still works when audio is unavailable. */ }
+    if (mounted.current) setReceived(true);
+  }
+
+  if (received) return <ArrivingEnvelope {...props} />;
+
+  return <main className="letter-arrival" aria-labelledby="arrival-title">
+    <div className="arrival-copy">
+      <h1 id="arrival-title">Có một lá thư<br /><em>em gửi chị.</em></h1>
+      <p>Yên tâm, không phải hóa đơn đâu chị.</p>
+    </div>
+    <div className="arrival-stage">
+      <button type="button" className="primary-button receive-letter" data-sound="none" aria-describedby="receive-instruction" disabled={receiving} onClick={receiveLetter}>
+        <Mail size={20} strokeWidth={1.4} aria-hidden="true" />
+        {receiving ? 'Thư đang đến…' : 'Chạm để nhận thư'}
+      </button>
+    </div>
+    <p className="arrival-instruction" id="receive-instruction">Thư sẽ bay đến cùng một chút âm thanh.</p>
+  </main>;
+}
+
+function ArrivingEnvelope({ onOpenStart, onOpen, reducedMotion, paused, playSound }) {
   const root = useRef(null);
   const flight = useRef(null);
   const hovering = useRef(null);
@@ -17,6 +56,7 @@ export default function EntranceEnvelope({ onOpenStart, onOpen, reducedMotion, p
   const [isOpening, setIsOpening] = useState(false);
 
   const { contextSafe } = useGSAP(() => {
+    root.current.querySelector('.arrival-envelope')?.focus({ preventScroll: true });
     // Arrival and gentle hovering use separate targets so opening can settle the paper.
     flight.current = gsap.timeline({
       paused: true, defaults: { ease: 'power3.out' },
