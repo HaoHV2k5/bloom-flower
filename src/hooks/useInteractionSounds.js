@@ -44,36 +44,41 @@ export default function useInteractionSounds() {
       voices.add(source);
       source.onended = () => { voices.delete(source); source.disconnect(); nodes.forEach(node => node.disconnect()); };
     };
-    const tone = (frequency, offset, duration, volume) => {
+    const tone = (frequency, offset, duration, volume, attack = .018) => {
       const source = context.createOscillator();
       const gain = context.createGain();
       source.type = 'sine';
       source.frequency.setValueAtTime(frequency, now + offset);
       gain.gain.setValueAtTime(0, now + offset);
-      gain.gain.linearRampToValueAtTime(volume, now + offset + .018);
+      gain.gain.linearRampToValueAtTime(volume, now + offset + attack);
       gain.gain.exponentialRampToValueAtTime(.0001, now + offset + duration);
       source.connect(gain); gain.connect(master); track(source, [gain]);
       source.start(now + offset); source.stop(now + offset + duration + .025);
     };
-    const rustle = (offset, duration, volume, frequency, endFrequency = frequency) => {
+    const rustle = (offset, duration, volume, frequency, endFrequency = frequency, type = 'bandpass', attack = .04) => {
       const source = context.createBufferSource();
       const filter = context.createBiquadFilter();
       const gain = context.createGain();
       source.buffer = noise;
       source.loop = true;
-      filter.type = 'bandpass'; filter.Q.value = .65;
+      filter.type = type; filter.Q.value = .65;
       filter.frequency.setValueAtTime(frequency, now + offset);
       filter.frequency.exponentialRampToValueAtTime(endFrequency, now + offset + duration);
       gain.gain.setValueAtTime(0, now + offset);
-      gain.gain.linearRampToValueAtTime(volume, now + offset + .04);
+      gain.gain.linearRampToValueAtTime(volume, now + offset + attack);
       gain.gain.exponentialRampToValueAtTime(.0001, now + offset + duration);
       source.connect(filter); filter.connect(gain); gain.connect(master); track(source, [filter, gain]);
       source.start(now + offset); source.stop(now + offset + duration + .025);
     };
-    if (kind === 'arrival') { rustle(0, 1.2, .32, 650, 2100); rustle(.18, .85, .16, 2400, 850); }
-    else if (kind === 'letter') { rustle(0, 1.55, .3, 950, 1700); rustle(.28, 1.1, .18, 2500, 1100); }
+    // Soft paper and rounded notes replace the sharp, sweeping wind hiss.
+    if (kind === 'arrival') {
+      rustle(0, .95, .055, 850, 550, 'lowpass', .14);
+      tone(523.25, .02, .85, .035, .1);
+      tone(659.25, .18, .95, .018, .12);
+    }
+    else if (kind === 'letter') { rustle(0, 1.3, .08, 1000, 650, 'lowpass', .16); rustle(.4, .9, .045, 1200, 700, 'lowpass', .14); }
     else if (kind === 'page') { rustle(0, .42, .075, 1200); rustle(.11, .27, .035, 2300); }
-    else if (kind === 'seal') { tone(290, 0, .18, .07); rustle(.04, .55, .23, 1700, 1000); }
+    else if (kind === 'seal') { tone(392, 0, .35, .035, .04); rustle(.04, .5, .07, 1100, 650, 'lowpass', .1); }
     else if (kind === 'bloom') {
       [523.25, 659.25, 783.99, 1046.5].forEach((note, i) => {
         tone(note, i * .17, 1.25, .035 - i * .004);

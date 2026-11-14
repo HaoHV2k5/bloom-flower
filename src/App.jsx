@@ -208,7 +208,7 @@ export default function App() {
           <IconButton label={sounds.enabled ? 'Tắt âm thanh hiệu ứng' : 'Bật âm thanh hiệu ứng'} aria-pressed={sounds.enabled} data-sound="none" onClick={sounds.toggle}>{sounds.enabled ? <Volume2 size={18} strokeWidth={1.5} /> : <VolumeX size={18} strokeWidth={1.5} />}</IconButton>
         </div>
       </header>
-      {screen === 'envelope' ? <EntranceEnvelope primeSound={sounds.prime} onOpenStart={prepareMusic} onOpen={openInvitation} reducedMotion={reducedMotion} paused={motionPaused} playSound={sounds.play} /> : screen === 'wishes' ? <GardenReveal onBack={returnToInvitation} reducedMotion={reducedMotion} paused={motionPaused} playSound={sounds.play} /> : <main className="invitation-layout"><GardenIllustration/><PinInvitation reducedMotion={reducedMotion || motionPaused} onUnlock={unlock}/></main>}
+      {screen === 'envelope' ? <EntranceEnvelope onOpenStart={prepareMusic} onOpen={openInvitation} reducedMotion={reducedMotion} paused={motionPaused} playSound={sounds.play} /> : screen === 'wishes' ? <GardenReveal onBack={returnToInvitation} reducedMotion={reducedMotion} paused={motionPaused} playSound={sounds.play} /> : <main className="invitation-layout"><GardenIllustration/><PinInvitation reducedMotion={reducedMotion || motionPaused} onUnlock={unlock}/></main>}
       <ButterflyField paused={motionPaused} reducedMotion={reducedMotion} />
       <footer className="site-footer"><span>Một khoảng trời nhỏ, em gửi chị.</span><span>made with a little love <Heart size={12} strokeWidth={1.25} /></span></footer>
       <audio ref={audio} className="song" src={`${import.meta.env.BASE_URL}assets/hbd.mp3`} loop preload="auto" />
