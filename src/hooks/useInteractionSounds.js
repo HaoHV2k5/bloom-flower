@@ -2,9 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 // Short, locally synthesized foley: no downloads and no audio before a user gesture.
 export default function useInteractionSounds() {
-  const [enabled, setEnabled] = useState(() => {
-    try { return localStorage.getItem('dear-you-effects') !== 'off'; } catch { return true; }
-  });
+  const [enabled, setEnabled] = useState(true);
   const enabledRef = useRef(enabled);
   const engine = useRef(null);
   const lastTap = useRef(-Infinity);
@@ -79,7 +77,6 @@ export default function useInteractionSounds() {
     const next = !enabledRef.current;
     enabledRef.current = next;
     setEnabled(next);
-    try { localStorage.setItem('dear-you-effects', next ? 'on' : 'off'); } catch {}
     if (!next) { stopVoices(); }
     else { prime(event); }
   }, [prime, stopVoices]);

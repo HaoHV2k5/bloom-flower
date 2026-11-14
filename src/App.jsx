@@ -124,11 +124,11 @@ export default function App() {
   const sounds = useInteractionSounds();
   const reducedMotion = useReducedMotion();
   const [motionPaused, setMotionPaused] = useState(reducedMotion);
-  const [musicPlaying, setMusicPlaying] = useState(false);
+  const [musicEnabled, setMusicEnabled] = useState(true);
   const [audioMessage, setAudioMessage] = useState('');
   const [screen, setScreen] = useState('envelope');
   const audio = useRef(null);
-  const preference = useRef(null);
+  const preference = useRef(true);
   const root = useRef(null);
   useEffect(() => { setMotionPaused(reducedMotion); }, [reducedMotion]);
   useGSAP(() => {
@@ -140,17 +140,33 @@ export default function App() {
       onComplete: () => setScreen('wishes'),
     });
   }, { scope: root, dependencies: [screen, reducedMotion, motionPaused], revertOnUpdate: true });
-  const playMusic = useCallback(async () => {
+  const playMusic = useCallback(async (reportFailure = true) => {
+    if (!preference.current || !audio.current || !audio.current.paused) return;
     try {
       audio.current.volume = .24;
       await audio.current.play();
-      setMusicPlaying(true);
       setAudioMessage('');
-    } catch { setAudioMessage('Chạm vào nốt nhạc để nghe một chút dịu dàng nhé.'); }
+    } catch {
+      if (reportFailure && preference.current) setAudioMessage('Chạm vào nốt nhạc để nghe một chút dịu dàng nhé.');
+    }
   }, []);
+  useEffect(() => {
+    // Retry during a user gesture when the browser blocks autoplay on arrival.
+    const startMusic = () => { void playMusic(false); };
+    startMusic();
+    document.addEventListener('click', startMusic);
+    document.addEventListener('keydown', startMusic);
+    return () => {
+      document.removeEventListener('click', startMusic);
+      document.removeEventListener('keydown', startMusic);
+    };
+  }, [playMusic]);
   function toggleMusic() {
-    if (musicPlaying) { audio.current.pause(); setMusicPlaying(false); preference.current = false; }
-    else { preference.current = true; void playMusic(); }
+    const enabled = !preference.current;
+    preference.current = enabled;
+    setMusicEnabled(enabled);
+    if (enabled) void playMusic();
+    else { audio.current.pause(); setAudioMessage(''); }
   }
   const openInvitation = useCallback(() => setScreen('invitation'), []);
   const returnToInvitation = useCallback(() => {
@@ -169,14 +185,14 @@ export default function App() {
         <a className="wordmark" href="#" onClick={event => { event.preventDefault(); setScreen('envelope'); }} aria-label="Dear you, về phong thư"><Flower2 size={25} strokeWidth={1.1} />dear you<span>.</span></a>
         <div className="header-controls"><span className="header-note">một chút dịu dàng, gửi Huyền Trang</span>
           <IconButton label={motionPaused ? 'Bật chuyển động' : 'Tạm dừng chuyển động'} aria-pressed={motionPaused} onClick={() => setMotionPaused(value => !value)}>{motionPaused ? <Play size={17} strokeWidth={1.5} /> : <Pause size={17} strokeWidth={1.5} />}</IconButton>
-          <IconButton label={musicPlaying ? 'Tắt nhạc' : 'Bật nhạc'} aria-pressed={musicPlaying} onClick={toggleMusic}>{musicPlaying ? <Music2 size={18} strokeWidth={1.5} /> : <VolumeX size={18} strokeWidth={1.5} />}</IconButton>
+          <IconButton label={musicEnabled ? 'Tắt nhạc' : 'Bật nhạc'} aria-pressed={musicEnabled} onClick={toggleMusic}>{musicEnabled ? <Music2 size={18} strokeWidth={1.5} /> : <VolumeX size={18} strokeWidth={1.5} />}</IconButton>
           <IconButton label={sounds.enabled ? 'Tắt âm thanh hiệu ứng' : 'Bật âm thanh hiệu ứng'} aria-pressed={sounds.enabled} data-sound="none" onClick={sounds.toggle}>{sounds.enabled ? <Volume2 size={18} strokeWidth={1.5} /> : <VolumeX size={18} strokeWidth={1.5} />}</IconButton>
         </div>
       </header>
       {screen === 'envelope' ? <EntranceEnvelope onOpen={openInvitation} reducedMotion={reducedMotion} paused={motionPaused} playSound={sounds.play} /> : screen === 'wishes' ? <GardenReveal onBack={returnToInvitation} reducedMotion={reducedMotion} paused={motionPaused} playSound={sounds.play} /> : <main className="invitation-layout"><GardenIllustration/><PinInvitation reducedMotion={reducedMotion || motionPaused} onUnlock={unlock}/></main>}
       <ButterflyField paused={motionPaused} reducedMotion={reducedMotion} />
       <footer className="site-footer"><span>Một khoảng trời nhỏ, em gửi chị.</span><span>made with a little love <Heart size={12} strokeWidth={1.25} /></span></footer>
-      <audio ref={audio} className="song" src={`${import.meta.env.BASE_URL}assets/hbd.mp3`} loop preload="none" onPause={() => setMusicPlaying(false)} onPlay={() => setMusicPlaying(true)} />
+      <audio ref={audio} className="song" src={`${import.meta.env.BASE_URL}assets/hbd.mp3`} loop preload="auto" />
       <p className="audio-message" role="status">{audioMessage}</p>
     </div>
   </Tooltip.Provider>;
