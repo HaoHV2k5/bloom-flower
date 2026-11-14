@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-// Short, locally synthesized foley: no downloads and no audio before a user gesture.
+// Locally synthesized foley; a locked browser stays silent until a user gesture.
 export default function useInteractionSounds() {
   const [enabled, setEnabled] = useState(true);
   const enabledRef = useRef(enabled);
@@ -11,7 +11,7 @@ export default function useInteractionSounds() {
     engine.current?.voices.clear();
   }, []);
   const prime = useCallback(event => {
-    if (!enabledRef.current || !event?.isTrusted || document.hidden) return;
+    if (!enabledRef.current || (event && !event.isTrusted) || document.hidden) return;
     try {
       if (!engine.current) {
         const Context = window.AudioContext || window.webkitAudioContext;
@@ -26,12 +26,14 @@ export default function useInteractionSounds() {
         engine.current = { context, master, noise, voices: new Set() };
       }
       const { context } = engine.current;
-      if (context.state === 'suspended') return context.resume().catch(() => {});
+      // Do not queue a blocked arrival sound to play late on the opening click.
+      if (context.state === 'suspended' && event?.isTrusted) return context.resume().catch(() => {});
     } catch { /* Audio is optional; the book remains fully usable. */ }
   }, []);
   const play = useCallback(async (kind = 'tap', event) => {
     // A first click (including keyboard/assistive activation) must finish resuming audio.
     if (event) await prime(event);
+    else prime();
     const audio = engine.current;
     if (!enabledRef.current || !audio || audio.context.state !== 'running' || document.hidden) return;
     const { context, master, noise, voices } = audio;
@@ -53,20 +55,25 @@ export default function useInteractionSounds() {
       source.connect(gain); gain.connect(master); track(source, [gain]);
       source.start(now + offset); source.stop(now + offset + duration + .025);
     };
-    const rustle = (offset, duration, volume, frequency) => {
+    const rustle = (offset, duration, volume, frequency, endFrequency = frequency) => {
       const source = context.createBufferSource();
       const filter = context.createBiquadFilter();
       const gain = context.createGain();
       source.buffer = noise;
-      filter.type = 'bandpass'; filter.frequency.value = frequency; filter.Q.value = .65;
+      source.loop = true;
+      filter.type = 'bandpass'; filter.Q.value = .65;
+      filter.frequency.setValueAtTime(frequency, now + offset);
+      filter.frequency.exponentialRampToValueAtTime(endFrequency, now + offset + duration);
       gain.gain.setValueAtTime(0, now + offset);
       gain.gain.linearRampToValueAtTime(volume, now + offset + .04);
       gain.gain.exponentialRampToValueAtTime(.0001, now + offset + duration);
       source.connect(filter); filter.connect(gain); gain.connect(master); track(source, [filter, gain]);
       source.start(now + offset); source.stop(now + offset + duration + .025);
     };
-    if (kind === 'page') { rustle(0, .42, .075, 1200); rustle(.11, .27, .035, 2300); }
-    else if (kind === 'seal') { tone(290, 0, .14, .028); rustle(.04, .48, .055, 1700); }
+    if (kind === 'arrival') { rustle(0, 1.2, .32, 650, 2100); rustle(.18, .85, .16, 2400, 850); }
+    else if (kind === 'letter') { rustle(0, 1.55, .3, 950, 1700); rustle(.28, 1.1, .18, 2500, 1100); }
+    else if (kind === 'page') { rustle(0, .42, .075, 1200); rustle(.11, .27, .035, 2300); }
+    else if (kind === 'seal') { tone(290, 0, .18, .07); rustle(.04, .55, .23, 1700, 1000); }
     else if (kind === 'bloom') {
       [523.25, 659.25, 783.99, 1046.5].forEach((note, i) => {
         tone(note, i * .17, 1.25, .035 - i * .004);

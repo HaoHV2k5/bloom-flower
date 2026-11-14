@@ -18,7 +18,10 @@ export default function EntranceEnvelope({ onOpenStart, onOpen, reducedMotion, p
 
   const { contextSafe } = useGSAP(() => {
     // Arrival and gentle hovering use separate targets so opening can settle the paper.
-    flight.current = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } })
+    flight.current = gsap.timeline({
+      paused: true, defaults: { ease: 'power3.out' },
+      onStart: () => { void playSound('arrival'); },
+    })
       .from('.arrival-flight', { x: () => -Math.min(window.innerWidth * .7, 720), y: () => window.innerHeight * .38, rotation: -24, scale: .72, duration: 1.35 }, 0)
       .from('.arrival-copy', { autoAlpha: 0, y: 12, duration: .7 }, .3)
       .from('.arrival-instruction', { autoAlpha: 0, y: 7, duration: .55 }, .95);
@@ -26,7 +29,7 @@ export default function EntranceEnvelope({ onOpenStart, onOpen, reducedMotion, p
       y: -10, rotation: 1.4, duration: 2.4, repeat: -1, yoyo: true,
       ease: 'sine.inOut', paused: true,
     });
-    if (motion.current.reducedMotion || motion.current.paused) flight.current.progress(1);
+    if (motion.current.reducedMotion || motion.current.paused) flight.current.progress(1, true);
   }, { scope: root });
 
   useEffect(() => {
@@ -35,7 +38,7 @@ export default function EntranceEnvelope({ onOpenStart, onOpen, reducedMotion, p
       else hovering.current?.paused(paused || document.hidden || locked.current);
       for (const timeline of [flight.current, opening.current]) {
         if (!timeline) continue;
-        if (reducedMotion) timeline.progress(1);
+        if (reducedMotion) timeline.progress(1, timeline === flight.current);
         else timeline.paused(paused || document.hidden);
       }
     };
@@ -49,7 +52,7 @@ export default function EntranceEnvelope({ onOpenStart, onOpen, reducedMotion, p
     locked.current = true;
     setIsOpening(true);
     onOpenStart();
-    flight.current?.progress(1);
+    flight.current?.progress(1, true);
     hovering.current?.pause();
     playSound('seal', event);
     if (motion.current.reducedMotion || motion.current.paused) { onOpen(); return; }
@@ -58,11 +61,13 @@ export default function EntranceEnvelope({ onOpenStart, onOpen, reducedMotion, p
       .to('.arrival-seal', { y: 12, scale: .8, autoAlpha: 0, duration: .25 }, 0)
       .to('.arrival-flap', { rotationX: 180, duration: .8, ease: 'power2.inOut' }, .15)
       .set('.arrival-flap', { zIndex: 1 }, .57)
-      .to('.arrival-letter', { yPercent: -62, duration: .85, ease: 'power3.out' }, .65)
-      .call(() => playSound('page'), [], .65)
+      .addLabel('letterLift', .65)
+      .to('.arrival-letter', { yPercent: -62, duration: 1.85, ease: 'sine.inOut' }, 'letterLift')
+      .call(() => playSound('letter'), [], 'letterLift')
+      .addLabel('letterShown')
       .to('.arrival-instruction', { autoAlpha: 0, duration: .2 }, .1)
       .to('.arrival-copy', { autoAlpha: 0, y: -8, duration: .3 }, .1)
-      .to('.arrival-flight', { y: 30, autoAlpha: 0, duration: .35 }, 1.45);
+      .to('.arrival-flight', { y: 30, autoAlpha: 0, duration: .35 }, 'letterShown+=.2');
   });
 
   return <main className="letter-arrival" ref={root} aria-labelledby="arrival-title">
