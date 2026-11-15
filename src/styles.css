@@ -433,6 +433,8 @@ html, body, #root { height: 100%; }
 .letter-ornament { margin-bottom: clamp(8px, 2cqh, 20px); }
 .letter-paper h1 { font-size: clamp(28px, 7cqh, 46px); margin-bottom: clamp(10px, 2.5cqh, 24px); }
 .wish-body > p { color: var(--ink); font-size: clamp(13.5px, 3.5cqh, 16px); line-height: 1.6; margin: 0 0 clamp(8px, 2cqh, 17px); }
+.wish-unwritten { visibility: hidden; }
+.wish-accessible-text { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 .wish-body .letter-signature { font: 400 clamp(18px, 4cqh, 24px)/1.1 var(--display); color: var(--rose-dark); margin: clamp(8px, 2cqh, 22px) 0; }
 .letter-action { margin-top: auto; padding-top: 6px; }
 .turn-page { min-height: 44px; font-size: clamp(20px, 4.5cqh, 25px); }

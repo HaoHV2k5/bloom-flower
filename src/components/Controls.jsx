@@ -17,8 +17,8 @@ export function HelpDialog() {
       <Dialog.Content className="help-dialog">
         <Heart className="dialog-heart" size={30} strokeWidth={1.25} />
         <Dialog.Title>Một ngày thật đặc biệt.</Dialog.Title>
-        <Dialog.Description>Mật mã là một ngày và một tháng, gồm 4 chữ số. Có một ngày nho nhỏ rất đáng nhớ, chị còn nhớ không?</Dialog.Description>
-        <p className="hint-example"><LockKeyhole size={15} /> Ngày trước, tháng sau. Thử nghĩ xem nhé.</p>
+        <Dialog.Description>Mật mã là ngày sinh nhật của chị, gồm 4 chữ số theo thứ tự ngày rồi đến tháng.</Dialog.Description>
+        <p className="hint-example"><LockKeyhole size={15} /> Ví dụ: sinh nhật 5/9 thì nhập 0509.</p>
         <Dialog.Close asChild><button className="primary-button">Để chị thử nhé <ArrowUpRight size={17} /></button></Dialog.Close>
         <Dialog.Close asChild><button className="dialog-close icon-button" aria-label="Đóng gợi ý"><X size={19} /></button></Dialog.Close>
       </Dialog.Content>

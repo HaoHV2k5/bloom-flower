@@ -5,10 +5,13 @@
 .arrival-copy h1 em { font-weight: 400; }
 .arrival-copy > p { font-size: 12px; color: var(--muted); line-height: 1.7; margin: 0; }
 .arrival-stage { height: 100%; min-height: 0; position: relative; container-type: size; display: grid; place-items: center; }
-.arrival-flight { position: relative; width: min(470px,84cqw,130cqh); aspect-ratio: 1.55; transform-origin: center; }
+.arrival-flight { position: relative; width: min(470px,84cqw,130cqh); aspect-ratio: 1.55; transform-origin: center; transform: translateY(8px) rotate(-2deg) scale(.86); }
 .arrival-envelope { position: absolute; inset: 0; width: 100%; height: 100%; display: block; border: 0; border-radius: 5px; background: transparent; padding: 0; perspective: 1400px; transform-style: preserve-3d; text-align: center; box-shadow: 0 23px 40px #75545b24; }
 .arrival-envelope:focus-visible { outline: 2px solid var(--rose-dark); outline-offset: 12px; }
 .arrival-envelope:disabled { cursor: default; }
+.arrival-petals { position: absolute; inset: 0; z-index: 6; pointer-events: none; }
+.arrival-petal { position: absolute; left: calc(50% - 5px); top: 46%; width: 10px; height: 17px; border-radius: 75% 15% 70% 30%; background: #c58b9e; opacity: 0; transform: scale(.3); }
+.arrival-petal:nth-child(2n) { width: 8px; height: 13px; background: #ddb5a3; }
 .arrival-envelope-back { position: absolute; inset: 0; background: #dcb8aa; border-radius: 5px; }
 .arrival-letter { position: absolute; inset: 13px 20px 10px; z-index: 2; background: #fffdf6; color: var(--rose-dark); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 16px; padding: 18px; box-shadow: 0 4px 16px #754c5214; }
 .arrival-letter > span { font: 400 clamp(20px,5cqh,32px)/1.05 var(--display); }

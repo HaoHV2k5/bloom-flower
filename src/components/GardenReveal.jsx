@@ -7,6 +7,19 @@ import EncouragementTimeline from './EncouragementTimeline';
 
 gsap.registerPlugin(useGSAP);
 
+const WISH_TEXT = [
+  'Gửi chị,',
+  'Em mong chị dám thử điều mình thích, và vẫn thương mình khi chưa làm tốt. Một lần chưa được không nói hết khả năng của chị. Phía trước còn nhiều cơ hội, đừng vội gạch tên mình nhé.',
+  'Em thích chị lúc rạng rỡ, và vẫn quý cả những ngày chị ít nói. Không cần hoàn hảo mới được thương đâu. Nếu cần một người đứng về phía mình, chị nhớ tính em vào nhé.',
+  'Người hơi thiên vị chị,',
+  'là em.',
+];
+const wishSegmenter = typeof Intl.Segmenter === 'function' ? new Intl.Segmenter('vi', { granularity: 'grapheme' }) : null;
+const WISH_CHARACTERS = WISH_TEXT.map(text => wishSegmenter ? Array.from(wishSegmenter.segment(text), part => part.segment) : Array.from(text));
+const WISH_OFFSETS = WISH_CHARACTERS.map((_, index) => WISH_CHARACTERS.slice(0, index).reduce((sum, part) => sum + part.length, 0));
+const ALL_WISH_CHARACTERS = WISH_CHARACTERS.flat();
+const FIRST_WISH_END = WISH_OFFSETS[2];
+
 function SealedEnvelope({ onOpen, disabled, reducedMotion, paused }) {
   const root = useRef(null);
   const drag = useRef(null);
@@ -100,6 +113,34 @@ function OpeningLetter({ onFlowers, reducedMotion, paused, alreadyOpened, playSo
   const [compactReading, setCompactReading] = useState(() => window.matchMedia('(max-width: 760px) and (max-height: 760px) and (orientation: portrait)').matches);
   const [wishPage, setWishPage] = useState(0);
   const [wishTurn, setWishTurn] = useState(null);
+  const streamed = useRef(reducedMotion || alreadyOpened ? ALL_WISH_CHARACTERS.length : 0);
+  const [visibleCharacters, setVisibleCharacters] = useState(streamed.current);
+  const showThrough = useCallback(count => {
+    streamed.current = Math.max(streamed.current, count);
+    setVisibleCharacters(streamed.current);
+  }, []);
+  const streamEnd = compactReading && wishPage === 0 ? FIRST_WISH_END : ALL_WISH_CHARACTERS.length;
+  const wishIsTurning = Boolean(wishTurn);
+  useEffect(() => {
+    if (reducedMotion) { showThrough(ALL_WISH_CHARACTERS.length); return; }
+    if (!ready || page !== 'wishes' || wishIsTurning) return;
+    if (compactReading && wishPage === 1) showThrough(FIRST_WISH_END);
+    if (paused) return;
+    let timer;
+    const tick = () => {
+      if (document.hidden || streamed.current >= streamEnd) return;
+      const character = ALL_WISH_CHARACTERS[streamed.current];
+      showThrough(streamed.current + 1);
+      timer = window.setTimeout(tick, /[.!?]/.test(character) ? 200 : /[,;]/.test(character) ? 85 : 24);
+    };
+    const sync = () => {
+      window.clearTimeout(timer);
+      if (!document.hidden) timer = window.setTimeout(tick, 80);
+    };
+    sync();
+    document.addEventListener('visibilitychange', sync);
+    return () => { window.clearTimeout(timer); document.removeEventListener('visibilitychange', sync); };
+  }, [ready, page, wishIsTurning, compactReading, wishPage, paused, reducedMotion, streamEnd, showThrough]);
   useEffect(() => {
     const query = window.matchMedia('(max-width: 760px) and (max-height: 760px) and (orientation: portrait)');
     const update = () => { wishFlip.current?.progress(1); setCompactReading(query.matches); };
@@ -227,15 +268,22 @@ function OpeningLetter({ onFlowers, reducedMotion, paused, alreadyOpened, playSo
       .to('.letter-postscript', { autoAlpha: 0, duration: .3 }, 1.35);
   });
 
+  function renderWishText(index, decorative) {
+    if (decorative) return WISH_TEXT[index];
+    const characters = WISH_CHARACTERS[index];
+    const count = Math.max(0, visibleCharacters - WISH_OFFSETS[index]);
+    return <><span className="wish-accessible-text">{WISH_TEXT[index]}</span><span aria-hidden="true">{characters.slice(0, count).join('')}<span className="wish-unwritten">{characters.slice(count).join('')}</span></span></>;
+  }
+
   function renderWishPaper(sheet, decorative = false) {
     return (
             <article className="letter-paper wishes-paper" aria-busy={!decorative && (!ready || Boolean(wishTurn))}>
               <div className="letter-ornament wish-line" aria-hidden="true"><Flower2 size={26} strokeWidth={1} /></div>
-              <h1 className="wish-line" ref={decorative ? undefined : heading} tabIndex="-1">Gửi chị,</h1>
+              <h1 className="wish-line" ref={decorative ? undefined : heading} tabIndex="-1">{renderWishText(0, decorative)}</h1>
               <div className="wish-body">
-                {(!compactReading || sheet === 0) && <p className="wish-line wish-paragraph-first">Em mong chị dám thử điều mình thích, và vẫn thương mình khi chưa làm tốt. Một lần chưa được không nói hết khả năng của chị. Phía trước còn nhiều cơ hội, đừng vội gạch tên mình nhé.</p>}
-                {(!compactReading || sheet === 1) && <p className="wish-line wish-paragraph-last">Em thích chị lúc rạng rỡ, và vẫn quý cả những ngày chị ít nói. Không cần hoàn hảo mới được thương đâu. Nếu cần một người đứng về phía mình, chị nhớ tính em vào nhé.</p>}
-                {(!compactReading || sheet === 1) && <p className="letter-signature wish-line">Người hơi thiên vị chị,<br /><em>là em.</em><Heart size={16} strokeWidth={1.2} aria-hidden="true" /></p>}
+                {(!compactReading || sheet === 0) && <p className="wish-line wish-paragraph-first">{renderWishText(1, decorative)}</p>}
+                {(!compactReading || sheet === 1) && <p className="wish-line wish-paragraph-last">{renderWishText(2, decorative)}</p>}
+                {(!compactReading || sheet === 1) && <p className="letter-signature wish-line">{renderWishText(3, decorative)}<br /><em>{renderWishText(4, decorative)}</em><Heart size={16} strokeWidth={1.2} aria-hidden="true" style={{ visibility: decorative || visibleCharacters >= ALL_WISH_CHARACTERS.length ? 'visible' : 'hidden' }} /></p>}
               </div>
               <div className="letter-action"><p>Khoan khép sách nhé…</p>{compactReading && sheet === 1 && <button type="button" className="previous-wish" aria-label="Đọc lại trang đầu" data-sound="none" disabled={decorative || Boolean(wishTurn)} onClick={() => changeWishPage(0)}><ArrowLeft size={16} aria-hidden="true" /></button>}<button type="button" className="turn-page" data-sound="none" disabled={decorative || !ready || page !== 'wishes' || Boolean(wishTurn)} onClick={advanceWishes}><span>{compactReading && sheet === 0 ? 'Lật tiếp lời chúc' : 'Còn một trang nữa'}</span><ArrowRight size={20} strokeWidth={1.2} aria-hidden="true" /><span className="page-corner" aria-hidden="true" /></button></div>
             </article>
@@ -274,7 +322,7 @@ function OpeningLetter({ onFlowers, reducedMotion, paused, alreadyOpened, playSo
         </div>
       </div>
     </div>
-    <div className="letter-postscript">{!ready ? <button type="button" className="skip-letter" onClick={() => opening.current?.progress(1)}>Xem ngay lời chúc <ArrowUpRight size={14} /></button> : page === 'turning' || page === 'returning' ? <button type="button" className="skip-letter" onClick={() => flip.current?.progress(page === 'returning' ? 0 : 1)}>{page === 'returning' ? 'Xem lại lời chúc' : 'Xem trang cuối'} <ArrowUpRight size={14} /></button> : openingGift ? <p role="status">Một điều dịu dàng đang thức giấc…</p> : <p>{page === 'secret' ? 'Có những bất ngờ, chỉ dành cho một người.' : 'Trang sau còn một điều em chưa kể.'}</p>}</div>
+    <div className="letter-postscript">{!ready ? <button type="button" className="skip-letter" onClick={() => opening.current?.progress(1)}>Xem ngay lời chúc <ArrowUpRight size={14} /></button> : page === 'wishes' && visibleCharacters < streamEnd ? <button type="button" className="skip-letter" data-sound="none" onClick={() => showThrough(streamEnd)}>Hiện toàn bộ lời chúc <ArrowUpRight size={14} /></button> : page === 'turning' || page === 'returning' ? <button type="button" className="skip-letter" onClick={() => flip.current?.progress(page === 'returning' ? 0 : 1)}>{page === 'returning' ? 'Xem lại lời chúc' : 'Xem trang cuối'} <ArrowUpRight size={14} /></button> : openingGift ? <p role="status">Một điều dịu dàng đang thức giấc…</p> : <p>{page === 'secret' ? 'Có những bất ngờ, chỉ dành cho một người.' : 'Trang sau còn một điều em chưa kể.'}</p>}</div>
   </section>;
 }
 

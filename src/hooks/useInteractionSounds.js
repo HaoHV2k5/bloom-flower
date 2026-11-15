@@ -70,15 +70,16 @@ export default function useInteractionSounds() {
       source.connect(filter); filter.connect(gain); gain.connect(master); track(source, [filter, gain]);
       source.start(now + offset); source.stop(now + offset + duration + .025);
     };
-    // Soft paper and rounded notes replace the sharp, sweeping wind hiss.
+    // The envelope uses only soft musical notes, with no noise or paper rustle.
     if (kind === 'arrival') {
-      rustle(0, .95, .055, 850, 550, 'lowpass', .14);
-      tone(523.25, .02, .85, .035, .1);
-      tone(659.25, .18, .95, .018, .12);
+      tone(523.25, 0, .7, .03, .06);
+      tone(659.25, .2, .85, .022, .08);
     }
-    else if (kind === 'letter') { rustle(0, 1.3, .08, 1000, 650, 'lowpass', .16); rustle(.4, .9, .045, 1200, 700, 'lowpass', .14); }
+    else if (kind === 'letter') {
+      [523.25, 659.25, 783.99].forEach((note, i) => tone(note, i * .22, .85, .022 - i * .004, .07));
+    }
     else if (kind === 'page') { rustle(0, .42, .075, 1200); rustle(.11, .27, .035, 2300); }
-    else if (kind === 'seal') { tone(392, 0, .35, .035, .04); rustle(.04, .5, .07, 1100, 650, 'lowpass', .1); }
+    else if (kind === 'seal') { tone(783.99, 0, .55, .018, .05); }
     else if (kind === 'bloom') {
       [523.25, 659.25, 783.99, 1046.5].forEach((note, i) => {
         tone(note, i * .17, 1.25, .035 - i * .004);

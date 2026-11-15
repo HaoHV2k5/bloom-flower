@@ -90,7 +90,7 @@ function PinInvitation({ onUnlock, reducedMotion }) {
   return <section ref={root} className="invitation-panel" aria-labelledby="pin-title">
     <div className="invitation-copy">
       <h1 id="pin-title" tabIndex={-1}>Dành tặng<br /> Huyền Trang.</h1>
-      <p>Quà có mật mã.<br />Còn thương chị thì em để lộ luôn.</p>
+      <p>Quà có mật mã.<br />Còn tình cảm này thì em để lộ luôn.</p>
     </div>
     <form className="pin-form" onSubmit={submit} autoComplete="off">
       <label htmlFor="pin-input" className="pin-label"><LockKeyhole size={14} strokeWidth={1.5} /> Mật mã của hai chị em</label>
